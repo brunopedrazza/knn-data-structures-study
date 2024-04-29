@@ -1,8 +1,7 @@
 import numpy as np
 import scipy
 
-from scipy.spatial import distance
-from utils import divide_chunks, measure_execution_time
+from utils import divide_chunks, measure_execution_time, euclidean_distance
 
 
 class KNN:
@@ -13,6 +12,7 @@ class KNN:
         self._y_train_indices = None
         self._sample_size = None
 
+    @measure_execution_time
     def fit(self, X_train, y_train):
         self._X_train = np.array(X_train)
         self._target = np.array(y_train)
@@ -36,7 +36,7 @@ class KNN:
         for i, X_test_chunk in enumerate(divide_chunks(X_test, n_chunks)):
             start = i * n_chunks
             end = start + X_test_chunk.shape[0]
-            dists = distance.cdist(X_test_chunk, self._X_train, 'euclidean')
+            dists = euclidean_distance(X_test_chunk, self._X_train)
             distances[start:end, :] = np.argsort(dists, axis=1)[:, :self.k]
 
         return distances
