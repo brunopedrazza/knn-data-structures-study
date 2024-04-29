@@ -5,6 +5,7 @@ import sklearn.metrics as metrics
 
 from kd_tree import KdTree
 from knn import KNN
+from utils import KNeighborsClassifierW
 
 if __name__ == "__main__":
     dataset = datasets.load_digits()
@@ -25,4 +26,15 @@ if __name__ == "__main__":
     # knn = KNN(k=9)
     # knn.fit(X_train, y_train)
     # y_pred = knn.predict(X_test, n_chunks=256)
+
+    acc = metrics.accuracy_score(y_test, y_pred)
+    print(f"acc: {acc*100:.2f}%")
+    
+    # sklearn
+    knn2 = KNeighborsClassifierW(n_neighbors=5, algorithm="kd_tree")
+    knn2.fit(X_train, y_train)
+    y_pred2 = knn2.predict(X_test)
+
+    acc2 = metrics.accuracy_score(y_test, y_pred2)
+    print(f"acc: {acc2*100:.2f}%")
 
