@@ -16,7 +16,7 @@ class MaxHeap:
         else:
             if k is not None and len(x) > k:
                 raise ValueError("Size of x must be lesser than max size")
-            self.heap = x
+            self.heap = [Node() for h in x] x
             self.heapify()
     
     def __str__(self):
