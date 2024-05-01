@@ -1,3 +1,5 @@
+from node import Node
+
 
 def left_pos(pos):
     return 2 * pos + 1
@@ -9,27 +11,29 @@ def parent_pos(pos):
     return int((pos - 1)/2)
 
 class MaxHeap:
-    def __init__(self, x=None, k=None):
+    def __init__(self, X=None, k=None):
         self.k = k
-        if x is None:
+        if X is None:
             self.heap = []
         else:
-            if k is not None and len(x) > k:
+            if k is not None and len(X) > k:
                 raise ValueError("Size of x must be lesser than max size")
-            self.heap = [Node() for h in x] x
+            self.heap = [Node.new(x) for x in X]
             self.heapify()
     
     def __str__(self):
         s = ""
-        for h in self.heap:
-            s += f"{h} "
+        for x in self.heap:
+            s += f"{x.distance} "
         return s
     
-    def add(self, value):
+    def add(self, x):
+        node = Node.new(x)
+
         h = self.heap
         c_pos = len(h)
 
-        h.append(value)
+        h.append(node)
 
         self.heapify_down(c_pos)
 
@@ -87,14 +91,14 @@ class MaxHeap:
     def compare_pos(self, c_pos, pos1, pos2=None):
         h = self.heap
         indxs = [c_pos]
-        values = [h[c_pos]]
+        values = [h[c_pos].distance]
         if self.is_valid_pos(pos1):
             indxs.append(pos1)
-            values.append(h[pos1])
+            values.append(h[pos1].distance)
 
         if pos2 is not None and self.is_valid_pos(pos2):
             indxs.append(pos2)
-            values.append(h[pos2])
+            values.append(h[pos2].distance)
 
         b_idx = values.index(max(values))
         return indxs[b_idx]
@@ -108,7 +112,6 @@ if __name__ == "__main__":
     h.add(3)
     h.add(56)
     h.add(90)
-    h.add(1)
 
     print(h)
 
