@@ -44,8 +44,9 @@ if __name__ == "__main__":
     def t(kd_tree):
         if not kd_tree:
             return
-        point_color = blue if kd_tree.class_ == "blue" else red
-        ax.scatter(kd_tree.point[0], kd_tree.point[1], color=point_color, s=60)
+        node = kd_tree.node
+        point_color = blue if node.class_ == "blue" else red
+        ax.scatter(node.point[0], node.point[1], color=point_color, s=60)
         t(kd_tree.left)
         t(kd_tree.right)
 
