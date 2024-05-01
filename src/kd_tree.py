@@ -1,6 +1,15 @@
 import numpy as np
 from utils import euclidean_distance, measure_execution_time
 
+class Node:
+    def __init__(self, point, class_):
+        self.point = point
+        self.class_ = class_
+        self.distance = None
+
+    def __str__(self):
+        return '%s' % self.point + (str(self.class_) if self.class_ else "")
+    
 class KdTree:
 
     def __init__(self, X, y, depth=0):
@@ -21,8 +30,7 @@ class KdTree:
         n = X.shape[0]
         mid = n // 2
 
-        self.point = X[mid]
-        self.class_ = y[mid]
+        self.node = Node(X[mid], y[mid])
         self.left = self.right = self.parent = None
 
         if mid > 0:
@@ -34,7 +42,7 @@ class KdTree:
             self.right.parent = self
     
     def __str__(self):
-        return '%s' % self.point + (str(self.class_) if self.class_ else "")
+        return str(self.node)
     
     @staticmethod
     @measure_execution_time
@@ -48,8 +56,8 @@ class KdTree:
         if n1 is None:
             return n0
         
-        d0 = euclidean_distance(n0.point, target)
-        d1 = euclidean_distance(n1.point, target)
+        d0 = euclidean_distance(n0.node.point, target)
+        d1 = euclidean_distance(n1.node.point, target)
 
         return n0 if d0 < d1 else n1
 
@@ -63,7 +71,7 @@ class KdTree:
         
         next = None
         other = None
-        p = root.point
+        p = root.node.point
         axis = depth % len(p)
         if point[axis] < p[axis]:
             next = root.left
@@ -73,25 +81,25 @@ class KdTree:
             other = root.left
         
         temp = KdTree.__predict(next, point, depth + 1)
-        best = KdTree.__closest(temp, root, point)
+        closest = KdTree.__closest(temp, root, point)
 
-        r = euclidean_distance(point, best.point)
+        r = euclidean_distance(point, closest.node.point)
         r_ = point[axis] - p[axis]
 
         if r >= r_:
             temp = KdTree.__predict(other, point, depth + 1)
-            best = KdTree.__closest(temp, best, point)
-        return best
+            closest = KdTree.__closest(temp, closest, point)
+        return closest
         
     @measure_execution_time
     def predict(self, X):
-        return [self.__predict(self, x).class_ for x in X]
+        return [self.__predict(self, x).node.class_ for x in X]
 
 
     def dfs(self, list_r = []):
         if not self:
             return
-        list_r.append([self.point, self.class_])
+        list_r.append(self.node)
         if self.left:
             self.left.dfs()
         if self.right:
