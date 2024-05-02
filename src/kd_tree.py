@@ -1,5 +1,7 @@
 import numpy as np
 
+from collections import Counter
+from heap import MaxHeap
 from node import Node
 from utils import euclidean_distance, measure_execution_time
     
@@ -55,12 +57,12 @@ class KdTree:
         return n0 if d0 < d1 else n1
 
     @staticmethod
-    def __predict(root, point, depth=0):
+    def __predict(root, point, h, depth=0):
         if not hasattr(point, "dtype"):
             point = np.array(point)
     
         if not root:
-            return None
+            return None, h
         
         next = None
         other = None
@@ -73,20 +75,29 @@ class KdTree:
             next = root.right
             other = root.left
         
-        temp = KdTree.__predict(next, point, depth + 1)
+        temp, h = KdTree.__predict(next, point, h, depth + 1)
         closest = KdTree.__closest(temp, root, point)
 
         r = euclidean_distance(point, closest.node.point)
+        closest.node.distance = r
+        if temp != closest:
+            h.add(closest.node)
         r_ = point[axis] - p[axis]
 
-        if r >= r_:
-            temp = KdTree.__predict(other, point, depth + 1)
+        if r >= r_ or not h.is_full():
+            temp, h = KdTree.__predict(other, point, h, depth + 1)
             closest = KdTree.__closest(temp, closest, point)
-        return closest
+        return closest, h
         
     @measure_execution_time
-    def predict(self, X):
-        return [self.__predict(self, x).node.class_ for x in X]
+    def predict(self, X, k):
+        preds = []
+        for x in X:
+            _, h = self.__predict(self, x, MaxHeap(k=k))
+            classes_ = [n.class_ for n in h.heap]
+            pred, _ = Counter(classes_).most_common(1)[0]
+            preds.append(pred)
+        return preds
 
 
     def dfs(self, list_r = []):
