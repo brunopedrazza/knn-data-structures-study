@@ -13,13 +13,9 @@ def parent_pos(pos):
 class MaxHeap:
     def __init__(self, X=None, k=None):
         self.k = k
-        if X is None:
-            self.heap = []
-        else:
-            if k is not None and len(X) > k:
-                raise ValueError("Size of x must be lesser than max size")
-            self.heap = [Node.new(x) for x in X]
-            self.heapify()
+        self.heap = []
+        if X is not None:
+            [self.add(Node.new(x)) for x in X]
     
     def __str__(self):
         s = ""
@@ -115,7 +111,9 @@ if __name__ == "__main__":
 
     print(h)
 
-    # print(h)
+    l = [22,8,13,3,56,90]
+    h = MaxHeap(l, k=3)
+    print(h)
     # print(h.remove())
     # print(h)
     # print(h.remove())
