@@ -83,6 +83,9 @@ class MaxHeap:
 
     def is_valid_pos(self, pos):
         return pos <= len(self.heap) - 1
+    
+    def is_full(self):
+        return len(self.heap) == self.k
 
     def compare_pos(self, c_pos, pos1, pos2=None):
         h = self.heap
