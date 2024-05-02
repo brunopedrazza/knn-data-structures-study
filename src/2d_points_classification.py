@@ -20,7 +20,7 @@ if __name__ == "__main__":
     
     new_points = [[2,3],[4,4]]
 
-    new_classes = list(kd_tree.predict(new_points))
+    new_classes = list(kd_tree.predict(new_points, k=3))
 
     # new_classes = list(kd_tree.predict(new_points))
     
