@@ -58,9 +58,6 @@ class KdTree:
 
     @staticmethod
     def __predict(root, point, h, depth=0):
-        if not hasattr(point, "dtype"):
-            point = np.array(point)
-    
         if not root:
             return None, h
         
@@ -77,7 +74,7 @@ class KdTree:
         
         temp, h = KdTree.__predict(next, point, h, depth + 1)
         closest = KdTree.__closest(temp, root, point)
-
+        
         r = euclidean_distance(point, closest.node.point)
         closest.node.distance = r
         if temp != closest:
@@ -85,9 +82,33 @@ class KdTree:
         r_ = point[axis] - p[axis]
 
         if r >= r_ or not h.is_full():
-            temp, h = KdTree.__predict(other, point, h, depth + 1)
+            temp, h = KdTree.__predict(other, point, h, depth+1)
             closest = KdTree.__closest(temp, closest, point)
         return closest, h
+
+    @staticmethod
+    def __predict2(root, point, best=None, best_d=None, depth=0):
+        if not root:
+            return best, best_d
+        
+        p = root.node.point
+
+        d = euclidean_distance(p, point)
+        if best is None or d < best_d:
+            best = root
+            best_d = d
+
+        axis = depth % len(p)
+        if point[axis] < p[axis]:
+            good, bad = root.left, root.right
+        else:
+            good, bad = root.right, root.left
+        
+        best, best_d = KdTree.__predict2(good, point, best, best_d, depth+1)
+
+        if best_d >= point[axis] - p[axis]:
+            best, best_d = KdTree.__predict2(bad, point, best, best_d, depth+1)
+        return best, best_d
         
     @measure_execution_time
     def predict(self, X, k):
@@ -97,6 +118,14 @@ class KdTree:
             classes_ = [n.class_ for n in h.heap]
             pred, _ = Counter(classes_).most_common(1)[0]
             preds.append(pred)
+        return preds
+    
+    @measure_execution_time
+    def predict2(self, X):
+        preds = []
+        for x in X:
+            r = self.__predict2(self, x)
+            preds.append(r[0].node.class_)
         return preds
 
 
