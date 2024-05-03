@@ -15,21 +15,21 @@ class MaxHeap:
         self.k = k
         self.heap = []
         if X is not None:
-            [self.add(Node.new(x)) for x in X]
+            [self.add(x) for x in X]
     
     def __str__(self):
         s = ""
         for x in self.heap:
-            s += f"{x.distance} "
+            s += f"{x[0]} "
         return s
     
     def add(self, x):
-        node = Node.new(x)
+        x = x if isinstance(x, tuple) else (x, None)
 
         h = self.heap
         c_pos = len(h)
 
-        h.append(node)
+        h.append(x)
 
         self.heapify_down(c_pos)
 
@@ -38,9 +38,14 @@ class MaxHeap:
     
     def remove(self):
         h = self.heap
+        if len(h) == 0:
+            return None
         root_v = h[0]
 
-        h[0] = h.pop()
+        last = h.pop()
+        if len(h) == 0:
+            return last
+        h[0] = last
 
         self.heapify_up(0)
 
@@ -90,14 +95,14 @@ class MaxHeap:
     def compare_pos(self, c_pos, pos1, pos2=None):
         h = self.heap
         indxs = [c_pos]
-        values = [h[c_pos].distance]
+        values = [h[c_pos][0]]
         if self.is_valid_pos(pos1):
             indxs.append(pos1)
-            values.append(h[pos1].distance)
+            values.append(h[pos1][0])
 
         if pos2 is not None and self.is_valid_pos(pos2):
             indxs.append(pos2)
-            values.append(h[pos2].distance)
+            values.append(h[pos2][0])
 
         b_idx = values.index(max(values))
         return indxs[b_idx]
@@ -117,14 +122,14 @@ if __name__ == "__main__":
     l = [22,8,13,3,56,90]
     h = MaxHeap(l, k=3)
     print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
+    print(h.remove())
+    print(h)
+    print(h.remove())
+    print(h)
+    print(h.remove())
+    print(h)
+    print(h.remove())
+    print(h)
 
     # x = [22,8,13,3,56,90]
     # h = MaxHeap(x=x, k=6)
