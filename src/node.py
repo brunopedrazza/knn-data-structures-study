@@ -1,14 +1,9 @@
 
 class Node:
-    def __init__(self, point, class_, distance=None):
+    def __init__(self, point, class_):
         self.point = point
         self.class_ = class_
-        self.distance = distance
 
     def __str__(self):
         return '%s' % self.point + (str(self.class_) if self.class_ else "")
-    
-    @staticmethod
-    def new(x):
-        return x if isinstance(x, Node) else Node(None, None, distance=x)
     
