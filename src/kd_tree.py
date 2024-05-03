@@ -57,7 +57,7 @@ class KdTree:
         return n0 if d0 < d1 else n1
 
     @staticmethod
-    def __predict(root, point, h, depth=0):
+    def __predict(root, point, h: MaxHeap, depth=0):
         if not root:
             return None, h
         
@@ -76,9 +76,8 @@ class KdTree:
         closest = KdTree.__closest(temp, root, point)
         
         r = euclidean_distance(point, closest.node.point)
-        closest.node.distance = r
         if temp != closest:
-            h.add(closest.node)
+            h.add((r, closest.node))
         r_ = point[axis] - p[axis]
 
         if r >= r_ or not h.is_full():
@@ -87,16 +86,17 @@ class KdTree:
         return closest, h
 
     @staticmethod
-    def __predict2(root, point, best=None, best_d=None, depth=0):
+    def __predict2(root, point, heap: MaxHeap, best=None, best_d=None, depth=0):
         if not root:
-            return best, best_d
+            return best, best_d, heap
         
         p = root.node.point
 
-        d = euclidean_distance(p, point)
+        d = euclidean_distance(point, p)
         if best is None or d < best_d:
             best = root
             best_d = d
+
 
         axis = depth % len(p)
         if point[axis] < p[axis]:
@@ -104,28 +104,37 @@ class KdTree:
         else:
             good, bad = root.right, root.left
         
-        best, best_d = KdTree.__predict2(good, point, best, best_d, depth+1)
+        prev_best = best
+        best, best_d, heap = KdTree.__predict2(good, point, heap, best, best_d, depth+1)
 
-        if best_d >= point[axis] - p[axis]:
-            best, best_d = KdTree.__predict2(bad, point, best, best_d, depth+1)
-        return best, best_d
+        if best_d >= point[axis] - p[axis] or not heap.is_full():
+            best, best_d, heap = KdTree.__predict2(bad, point, heap, best, best_d, depth+1)
+
+        if prev_best != best:
+            heap.add((best_d, best.node))
+        return best, best_d, heap
         
     @measure_execution_time
     def predict(self, X, k):
+        if not hasattr(X, "dtype"):
+            X = np.array(X)
         preds = []
         for x in X:
-            _, h = self.__predict(self, x, MaxHeap(k=k))
-            classes_ = [n.class_ for n in h.heap]
+            h = self.__predict(self, x, MaxHeap(k=k))[1]
+            classes_ = [n[1].class_ for n in h.heap]
             pred, _ = Counter(classes_).most_common(1)[0]
             preds.append(pred)
         return preds
     
     @measure_execution_time
-    def predict2(self, X):
+    def predict2(self, X, k):
+        if not hasattr(X, "dtype"):
+            X = np.array(X)
         preds = []
         for x in X:
-            r = self.__predict2(self, x)
-            preds.append(r[0].node.class_)
+            classes_ = [he[1].class_ for he in self.__predict2(self, x, MaxHeap(k=k))[2].heap]
+            pred, _ = Counter(classes_).most_common(1)[0]
+            preds.append(pred)
         return preds
 
 

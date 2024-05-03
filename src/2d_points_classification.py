@@ -18,9 +18,9 @@ if __name__ == "__main__":
 
     kd_tree.display()
     
-    new_points = [[2,3],[4,4]]
+    new_points = [[4,4]]
 
-    new_classes = list(kd_tree.predict(new_points, k=3))
+    new_classes = list(kd_tree.predict2(new_points, k=3))
 
     # new_classes = list(kd_tree.predict(new_points))
     

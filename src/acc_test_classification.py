@@ -9,7 +9,7 @@ from utils import KNeighborsClassifierW
 
 if __name__ == "__main__":
     dataset = datasets.load_digits()
-    k = 1
+    k = 10
 
     # dataset = datasets.fetch_covtype()
     # data, target = datasets.make_classification(n_samples=10000, n_features=50, n_classes=10, n_informative=10, shuffle=True, random_state=42)
@@ -30,15 +30,19 @@ if __name__ == "__main__":
     # acc = metrics.accuracy_score(y_test, y_pred)
     # print(f"pred 1 acc: {acc*100:.2f}%")
 
-    y_pred = kd_tree.predict2(X_test)
+    y_pred = kd_tree.predict2(X_test, k=k)
     acc = metrics.accuracy_score(y_test, y_pred)
     print(f"pred 2 acc: {acc*100:.2f}%")
+
+    y_pred = kd_tree.predict(X_test, k=k)
+    acc = metrics.accuracy_score(y_test, y_pred)
+    print(f"pred 1 acc: {acc*100:.2f}%")
     
     # sklearn
-    # knn2 = KNeighborsClassifierW(n_neighbors=k, algorithm="kd_tree")
-    # knn2.fit(X_train, y_train)
-    # y_pred2 = knn2.predict(X_test)
+    knn2 = KNeighborsClassifierW(n_neighbors=k, algorithm="kd_tree")
+    knn2.fit(X_train, y_train)
+    y_pred2 = knn2.predict(X_test)
 
-    # acc2 = metrics.accuracy_score(y_test, y_pred2)
-    # print(f"acc: {acc2*100:.2f}%")
+    acc2 = metrics.accuracy_score(y_test, y_pred2)
+    print(f"acc: {acc2*100:.2f}%")
 
