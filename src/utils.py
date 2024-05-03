@@ -1,6 +1,7 @@
 from time import perf_counter
 
 from numpy import ndarray
+import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from scipy.spatial import distance
 
@@ -20,7 +21,7 @@ def measure_execution_time(func):
 
 def euclidean_distance(p1, p2):
     if len(p1.shape) == 1:
-        return distance.euclidean(p1, p2)
+        return np.sqrt(np.sum(np.square(p1 - p2)))
     return distance.cdist(p1, p2, 'euclidean')
 
 class KNeighborsClassifierW(KNeighborsClassifier):
