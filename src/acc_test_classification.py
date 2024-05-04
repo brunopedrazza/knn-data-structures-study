@@ -17,26 +17,19 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(dataset.data, dataset.target, test_size=0.1, random_state=42)
 
     kd_tree = KdTree.construct(X_train, y_train)
-    # y_pred = kd_tree.predict(X_test, k=k)
-    # l = kd_tree.dfs()
-    
-    # for e in l:
-    #     print(e[1])
-    # my implemenation
-    # knn = KNN(k=9)
-    # knn.fit(X_train, y_train)
-    # y_pred = knn.predict(X_test, n_chunks=256)
 
-    # acc = metrics.accuracy_score(y_test, y_pred)
-    # print(f"pred 1 acc: {acc*100:.2f}%")
+    # my brute force
+    knn = KNN(k=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test, n_chunks=256)
 
+    acc = metrics.accuracy_score(y_test, y_pred)
+    print(f"pred my knn brute acc: {acc*100:.2f}%")
+
+    # my kd tree
     y_pred = kd_tree.predict2(X_test, k=k)
     acc = metrics.accuracy_score(y_test, y_pred)
-    print(f"pred 2 acc: {acc*100:.2f}%")
-
-    y_pred = kd_tree.predict(X_test, k=k)
-    acc = metrics.accuracy_score(y_test, y_pred)
-    print(f"pred 1 acc: {acc*100:.2f}%")
+    print(f"pred my kd tree acc: {acc*100:.2f}%")
     
     # sklearn
     knn2 = KNeighborsClassifierW(n_neighbors=k, algorithm="kd_tree")
@@ -44,5 +37,5 @@ if __name__ == "__main__":
     y_pred2 = knn2.predict(X_test)
 
     acc2 = metrics.accuracy_score(y_test, y_pred2)
-    print(f"acc: {acc2*100:.2f}%")
+    print(f"pred kd tree sklearn acc: {acc2*100:.2f}%")
 
