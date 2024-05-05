@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
-from kd_tree import KdTree
 from knn import KNN
 
 if __name__ == "__main__":
@@ -14,20 +12,12 @@ if __name__ == "__main__":
         "red", "red", "red", "red", "red", "blue"
     ]
     
-    kd_tree = KdTree.construct(points, targets)
-
-    kd_tree.display()
+    new_points = [[2,3],[4,4]]
     
-    new_points = [[4,4]]
-
-    new_classes = list(kd_tree.predict2(new_points, k=3))
-
-    # new_classes = list(kd_tree.predict(new_points))
-    
-    # clf = KNN(k=3)
-    # clf.fit(points, targets)
-    # new_classes = clf.predict(new_points)
-    # print(new_classes)
+    clf = KNN(k=3, method="kd_tree")
+    clf.fit(points, targets)
+    new_classes = clf.predict(new_points)
+    print(new_classes)
 
     # Visualize
     
@@ -41,16 +31,9 @@ if __name__ == "__main__":
     ax.tick_params(axis="x", color="white")
     ax.tick_params(axis="y", color="white")
 
-    def t(kd_tree):
-        if not kd_tree:
-            return
-        node = kd_tree.node
-        point_color = blue if node.class_ == "blue" else red
-        ax.scatter(node.point[0], node.point[1], color=point_color, s=60)
-        t(kd_tree.left)
-        t(kd_tree.right)
-
-    t(kd_tree)
+    for index, p in enumerate(points):
+        point_color = blue if targets[index] == "blue" else red
+        ax.scatter(p[0], p[1], color=point_color, s=60)
 
     for index, new_class in enumerate(new_classes):
         new_point_color = blue if new_class == "blue" else red
