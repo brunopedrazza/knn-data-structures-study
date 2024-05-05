@@ -1,5 +1,3 @@
-from node import Node
-
 
 def left_pos(pos):
     return 2 * pos + 1
@@ -14,6 +12,7 @@ class MaxHeap:
     def __init__(self, X=None, k=None):
         self.k = k
         self.heap = []
+        self.count = 0
         if X is not None:
             [self.add(x) for x in X]
     
@@ -24,12 +23,13 @@ class MaxHeap:
         return s
     
     def add(self, x):
-        x = x if isinstance(x, tuple) else (x, None)
+        x = x if isinstance(x, list) else [x, None]
 
         h = self.heap
         c_pos = len(h)
 
         h.append(x)
+        self.count += 1
 
         self.heapify_down(c_pos)
 
