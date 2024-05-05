@@ -7,13 +7,13 @@ from knn import KNN
 from utils import KNeighborsClassifierW
 
 if __name__ == "__main__":
-    dataset = datasets.load_digits()
-    k = 10
+    dataset = datasets.load_breast_cancer()
+    data = dataset.data
+    target = dataset.target
+    k = 5
 
-    # dataset = datasets.fetch_covtype()
-    # data, target = datasets.make_classification(n_samples=10000, n_features=50, n_classes=10, n_informative=10, shuffle=True, random_state=42)
-
-    X_train, X_test, y_train, y_test = train_test_split(dataset.data, dataset.target, test_size=0.1, random_state=42)
+    data, target = datasets.make_classification(n_samples=10000, n_features=7, n_classes=10, n_informative=5, shuffle=True, random_state=22)
+    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=42)
     print("Len X_train " + str(len(X_train)))
     print("Len X_test " + str(len(X_test)))
 
@@ -26,7 +26,6 @@ if __name__ == "__main__":
     print(f"pred my knn brute acc: {acc*100:.2f}%")
 
     # my kd tree
-    # my brute force
     knn = KNN(k=k, method="kd_tree")
     knn.fit(X_train, y_train)
     y_pred = knn.predict(X_test)

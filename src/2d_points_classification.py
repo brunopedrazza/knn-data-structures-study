@@ -14,7 +14,7 @@ if __name__ == "__main__":
     
     new_points = [[2,3],[4,4]]
     
-    clf = KNN(k=3, method="kd_tree")
+    clf = KNN(k=11, method="kd_tree")
     clf.fit(points, targets)
     new_classes = clf.predict(new_points)
     print(new_classes)
