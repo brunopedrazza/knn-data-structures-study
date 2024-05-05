@@ -33,12 +33,6 @@ class KNN:
             self._X_train = np.array(X_train)
         elif self._method == "kd_tree":
             self._tree = KdTree.construct(X_train)
-
-    
-    # @staticmethod
-    # def __euclidean_distances(X_train, X_test):
-    #     return distance.cdist(X_test, X_train, 'euclidean')
-        # return np.sqrt(np.sum(np.square(np.expand_dims(X_test, axis=1) - X_train), axis=2))
     
     def __compute_distances(self, X_test, size_chunks):
         best_idxs = np.empty((X_test.shape[0], self._k), dtype=np.int32)
