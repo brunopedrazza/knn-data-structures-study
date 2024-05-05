@@ -47,8 +47,10 @@ class KdTree:
         if not current:
             return mh
         
-        d = euclidean_distance(current.point, target)
-        mh.add([d, current.idx])
+        # get the distance squared to save 1 unecessary calculation
+        # all distance are going to be compared squared
+        d_squared = euclidean_distance(current.point, target, squared=True)
+        mh.add([d_squared, current.idx])
 
         axis = depth % len(current.point)
         if target[axis] < current.point[axis]:
@@ -58,8 +60,12 @@ class KdTree:
         
         mh = KdTree.__predict(good, target, mh, depth+1)
         r_ = target[axis] - current.point[axis]
-        # if mh.heap[0][0] >= r_ * r_ or not mh.is_full():
-        if any(b[0] >= abs(r_) for b in mh.heap) or not mh.is_full():
+
+        # if the most distant point to the target is further than the current point on axis,
+        # we need to check the bad side
+
+        # we are comparing with the square of r_ because our distances are squared
+        if mh.heap[0][0] >= r_ * r_ or not mh.is_full():
             mh = KdTree.__predict(bad, target, mh, depth+1)
 
         return mh
@@ -67,7 +73,9 @@ class KdTree:
     def predict(self, X, k):
         best_idxs = np.empty((X.shape[0], k, 2), dtype=np.int32)
         for i, x in enumerate(X):
-            best_idxs[i] = self.__predict(self, x, MaxHeap(k=k)).heap
+            mh = self.__predict(self, x, MaxHeap(k=k))
+            # print(mh.count)
+            best_idxs[i] = mh.heap
 
         indices = np.argsort(best_idxs[:,:,0], axis=1)
         return best_idxs[np.arange(best_idxs.shape[0])[:, None], indices, 1]
