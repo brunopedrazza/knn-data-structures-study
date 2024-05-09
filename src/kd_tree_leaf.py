@@ -11,6 +11,7 @@ class KdTreeLeaf:
         self.X_idx = None
         self.is_leaf = False
         self.split_value = None
+        self.axis = None
         self.left = self.right = None
         
         axis = depth % X.shape[1]
@@ -29,6 +30,7 @@ class KdTreeLeaf:
         
         mid = n // 2
         self.split_value = X[mid][axis]
+        self.axis = axis
 
         if mid > 0:
             self.left = KdTreeLeaf(X[:mid], X_idx[:mid], leaf_size, depth + 1)
@@ -44,36 +46,37 @@ class KdTreeLeaf:
         return KdTreeLeaf(X, np.array([i for i in range(0, X.shape[0])]), leaf_size=leaf_size)
 
     @staticmethod
-    def __predict(current, target, best=None, best_d=None, depth=0):
-        if not current:
-            return best, best_d
-        
-        d = euclidean_distance(current.point, target)
-        if d < best_d:
-            best_d = d
-            best = current.point
+    def __predict(current, target, best_idx=None, best_d=None):
 
-        axis = depth % len(current.point)
-        if target[axis] < current.point[axis]:
-            good, bad = current.left, current.right
+        if not current.is_leaf:
+            axis = current.axis
+            if target[axis] < current.split_value:
+                good, bad = current.left, current.right
+            else:
+                good, bad = current.right, current.left
+            
+            best_idx_leaf, best_d_leaf = KdTreeLeaf.__predict(good, target, best_idx, best_d)
+            if best_idx is None or best_d_leaf < best_d:
+                best_idx = best_idx_leaf
+                best_d = best_d_leaf
+
+            r_ = target[axis] - current.split_value
+            if best_d >= abs(r_):
+                best_idx_leaf, best_d_leaf = KdTreeLeaf.__predict(bad, target, best_idx, best_d)
+                if best_d_leaf < best_d:
+                    best_idx = best_idx_leaf
+                    best_d = best_d_leaf
         else:
-            good, bad = current.right, current.left
-        
-        best, best_d = KdTreeLeaf.__predict(good, target, best, best_d, depth+1)
-        r_ = target[axis] - current.point[axis]
+            dists = euclidean_distance(np.array([target]), current.X)
+            best_idx_leaf = np.argsort(dists, axis=1)[:, :1][0][0]
+            return current.X_idx[best_idx_leaf], dists[0][best_idx_leaf]
 
-        if best_d >= r_:
-            best, best_d = KdTreeLeaf.__predict(bad, target, best, best_d, depth+1)
-
-        return best, best_d
+        return best_idx, best_d
     
-    # def predict(self, X, k):
-    #     best_idxs = np.empty((X.shape[0], k, 2), dtype=np.int32)
-    #     for i, x in enumerate(X):
-    #         mh = self.__predict(self, x, MaxHeap(k=k))
-    #         # print(mh.count)
-    #         best_idxs[i] = mh.heap
-
-    #     indices = np.argsort(best_idxs[:,:,0], axis=1)
-    #     return best_idxs[np.arange(best_idxs.shape[0])[:, None], indices, 1]
+    def predict(self, X, k):
+        best_idxs = np.empty((X.shape[0], k), dtype=np.int32)
+        for i, x in enumerate(X):
+            xp = self.__predict(self, x)
+            best_idxs[i] = xp[0]
+        return best_idxs
 
