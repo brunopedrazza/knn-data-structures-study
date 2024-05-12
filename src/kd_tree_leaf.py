@@ -1,9 +1,10 @@
 import numpy as np
+import heapq
 
 from heap import MaxHeap
 from utils import euclidean_distance
     
-class KdTreeLeaf:
+class KdTreeLeafNode:
 
     def __init__(self, X, X_idx, leaf_size, depth=0):
 
@@ -33,20 +34,19 @@ class KdTreeLeaf:
         self.axis = axis
 
         if mid > 0:
-            self.left = KdTreeLeaf(X[:mid], X_idx[:mid], leaf_size, depth + 1)
+            self.left = KdTreeLeafNode(X[:mid], X_idx[:mid], leaf_size, depth + 1)
         
         if n - (mid + 1) > 0:
-            self.right = KdTreeLeaf(X[mid:], X_idx[mid:], leaf_size, depth + 1)
+            self.right = KdTreeLeafNode(X[mid:], X_idx[mid:], leaf_size, depth + 1)
 
-    
-    @staticmethod
-    def construct(X, leaf_size):
-        if not hasattr(X, "dtype"):
-            X = np.array(X)
-        return KdTreeLeaf(X, np.array([i for i in range(0, X.shape[0])]), leaf_size=leaf_size)
+class KdTreeLeaf:
 
-    @staticmethod
-    def __predict(current, target, best_idx=None, best_d=None):
+    def __init__(self, X, k, leaf_size):
+        self._root = KdTreeLeafNode(X, np.array([i for i in range(0, len(X))]), leaf_size)
+        self._k = k
+        self.distance_count = 0
+
+    def __predict(self, current: KdTreeLeafNode, target, mh: MaxHeap):
 
         if not current.is_leaf:
             axis = current.axis
@@ -55,28 +55,67 @@ class KdTreeLeaf:
             else:
                 good, bad = current.right, current.left
             
-            best_idx_leaf, best_d_leaf = KdTreeLeaf.__predict(good, target, best_idx, best_d)
-            if best_idx is None or best_d_leaf < best_d:
-                best_idx = best_idx_leaf
-                best_d = best_d_leaf
+            mh = self.__predict(good, target, mh)
 
             r_ = target[axis] - current.split_value
-            if best_d >= abs(r_):
-                best_idx_leaf, best_d_leaf = KdTreeLeaf.__predict(bad, target, best_idx, best_d)
-                if best_d_leaf < best_d:
-                    best_idx = best_idx_leaf
-                    best_d = best_d_leaf
+            if mh.heap[0][0] >= abs(r_) or not mh.is_full():
+                mh = self.__predict(bad, target, mh)
         else:
-            dists = euclidean_distance(np.array([target]), current.X)
-            best_idx_leaf = np.argsort(dists, axis=1)[:, :1][0][0]
-            return current.X_idx[best_idx_leaf], dists[0][best_idx_leaf]
+            dists = euclidean_distance(np.array([target]), current.X)[0]
+            self.distance_count += current.X.shape[0]
 
-        return best_idx, best_d
+            sorted_idxs = np.argsort(dists)
+            sorted_dists = dists[sorted_idxs[:self._k]]
+            sorted_X_idxs = current.X_idx[sorted_idxs[:self._k]]
+            if len(mh.heap) == 0 or mh.heap[0][0] > sorted_dists[0]:
+                for d, idx in zip(sorted_dists, sorted_X_idxs):
+                    if len(mh.heap) < self._k or d < mh.heap[0][0]:
+                        mh.add([d, idx])
+            return mh
+
+        return mh
+    
+    def __predict2(self, current: KdTreeLeafNode, target, mh):
+
+        if not current.is_leaf:
+            axis = current.axis
+            if target[axis] < current.split_value:
+                good, bad = current.left, current.right
+            else:
+                good, bad = current.right, current.left
+            
+            mh = self.__predict2(good, target, mh)
+
+            r_ = target[axis] - current.split_value
+            if len(mh) < self._k or -mh[0][0] > abs(r_):  # Use -mh[0][0] to get the actual max distance
+                mh = self.__predict2(bad, target, mh)
+        else:
+            dists = euclidean_distance(np.array([target]), current.X)[0]
+            self.distance_count += current.X.shape[0]
+
+            for d, idx in zip(dists, current.X_idx):
+                if len(mh) < self._k:
+                    heapq.heappush(mh, (-d, idx))  # Push negative distance to simulate max heap
+                elif -mh[0][0] > d:  # Check if the largest (negative) distance is greater than the current distance
+                    heapq.heapreplace(mh, (-d, idx))  # Replace the root and then heapify
+            return mh
+
+        return mh
     
     def predict(self, X, k):
-        best_idxs = np.empty((X.shape[0], k), dtype=np.int32)
+        best_idxs = np.empty((X.shape[0], k, 2), dtype=np.int32)
         for i, x in enumerate(X):
-            xp = self.__predict(self, x)
-            best_idxs[i] = xp[0]
-        return best_idxs
+            mh = self.__predict(self._root, x, MaxHeap(k=k))
+            best_idxs[i] = mh.heap
+
+        indices = np.argsort(best_idxs[:,:,0], axis=1)
+        return best_idxs[np.arange(best_idxs.shape[0])[:, None], indices, 1]
+
+    def predict2(self, X, k):
+        best_idxs = np.empty((X.shape[0], k, 2), dtype=np.int32)
+        for i, x in enumerate(X):
+            best_idxs[i] = self.__predict2(self._root, x, [])
+
+        indices = np.argsort(best_idxs[:,:,0], axis=1)
+        return best_idxs[np.arange(best_idxs.shape[0])[:, None], indices, 1]
 
