@@ -12,7 +12,16 @@ if __name__ == "__main__":
     target = dataset.target
     k = 5
 
-    data, target = datasets.make_classification(n_samples=30000, n_features=7, n_classes=10, n_informative=5, shuffle=True, random_state=42)
+    data, target = datasets.make_classification(
+        n_samples=30000, 
+        n_features=7, 
+        n_informative=7, 
+        n_redundant=0, 
+        n_repeated=0, 
+        n_classes=10, 
+        shuffle=True, 
+        random_state=42)
+    
     X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=42)
     print("Len X_train " + str(len(X_train)))
     print("Len X_test " + str(len(X_test)))
