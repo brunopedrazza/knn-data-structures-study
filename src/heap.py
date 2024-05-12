@@ -12,7 +12,6 @@ class MaxHeap:
     def __init__(self, X=None, k=None):
         self.k = k
         self.heap = []
-        self.count = 0
         if X is not None:
             [self.add(x) for x in X]
     
@@ -29,7 +28,6 @@ class MaxHeap:
         c_pos = len(h)
 
         h.append(x)
-        self.count += 1
 
         self.heapify_down(c_pos)
 
