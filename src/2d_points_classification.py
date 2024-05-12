@@ -14,13 +14,16 @@ if __name__ == "__main__":
         "red", "red", "red", "red", "red", "blue"
     ]
     
-    kd = KdTreeLeaf.construct(points, leaf_size=3)
-    new_points = [[2,3],[4,4]]
+    new_points = [[1,1],[2,3],[4,4]]
+
+    knn = KNN(k=1, method="kd_tree_leaf", leaf_size=3)
+    knn.fit(points, targets)
+    new_classes = knn.predict(new_points)
     
-    clf = KNeighborsClassifierW(n_neighbors=3, algorithm="kd_tree", leaf_size=1)
-    clf.fit(points, targets)
-    new_classes = clf.predict(new_points)
-    print(new_classes)
+    # clf = KNeighborsClassifierW(n_neighbors=3, algorithm="kd_tree", leaf_size=1)
+    # clf.fit(points, targets)
+    # new_classes = clf.predict(new_points)
+    # print(new_classes)
 
     # Visualize
     
