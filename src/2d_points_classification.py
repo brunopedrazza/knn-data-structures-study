@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-from kd_tree_leaf import KdTreeLeaf
-from utils import KNeighborsClassifierW
 
 from knn import KNN
 
@@ -16,14 +14,9 @@ if __name__ == "__main__":
     
     new_points = [[1,1],[2,3],[4,4]]
 
-    knn = KNN(k=1, method="kd_tree_leaf", leaf_size=3)
+    knn = KNN(k=1, method="kd_tree", leaf_size=3)
     knn.fit(points, targets)
-    new_classes = knn.predict(new_points)
-    
-    # clf = KNeighborsClassifierW(n_neighbors=3, algorithm="kd_tree", leaf_size=1)
-    # clf.fit(points, targets)
-    # new_classes = clf.predict(new_points)
-    # print(new_classes)
+    new_classes = knn.predict(new_points)[0]
 
     # Visualize
     
