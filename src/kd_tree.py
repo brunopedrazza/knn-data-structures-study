@@ -1,5 +1,4 @@
 import numpy as np
-import heapq
 
 from heap import MaxHeap
 from utils import euclidean_distance
@@ -58,7 +57,7 @@ class KdTree:
             mh = self.__predict(good, target, mh)
 
             r_ = target[axis] - current.split_value
-            if mh.heap[0][0] >= abs(r_) or not mh.is_full():
+            if not mh.is_full() or mh.heap[0][0] >= abs(r_):
                 mh = self.__predict(bad, target, mh)
         else:
             dists = euclidean_distance(np.array([target]), current.X)[0]
