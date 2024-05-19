@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+from ball_tree import BallTree
 from knn import KNN
 
 if __name__ == "__main__":
@@ -11,6 +12,9 @@ if __name__ == "__main__":
         "blue", "blue", "blue", "blue", "blue",
         "red", "red", "red", "red", "red", "blue"
     ]
+
+    bt = BallTree(points, 3, 2)
+    print(bt)
     
     new_points = [[1,1],[2,3],[4,4]]
 
