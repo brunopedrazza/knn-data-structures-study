@@ -33,8 +33,8 @@ if __name__ == "__main__":
         for result in results:
             improv = 0
             if result["method"] != "brute_force":
-                brute_predict_duration = next(item["predict_duration_seconds"] for item in results if item["method"] == "brute_force" and item["k"] == result["k"])
-                improv = (1 - (result["predict_duration_seconds"]/brute_predict_duration)) * 100
+                brute_predict_duration = next((item["predict_duration_seconds"] for item in results if item["method"] == "brute_force" and item["k"] == result["k"]), 0)
+                improv = (1 - (result["predict_duration_seconds"]/brute_predict_duration)) * 100 if brute_predict_duration != 0 else 0
             result["predict_performance_improv_%"] = math.trunc(improv)
         print(tabulate(results, headers="keys", tablefmt="rounded_grid"))
 
