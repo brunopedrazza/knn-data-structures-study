@@ -9,8 +9,7 @@ if __name__ == "__main__":
 
     leaf_size = 100
     methods = ["brute_force", "kd_tree", "ball_tree"]
-    # methods = ["kd_tree", "ball_tree"]
-    # methods = ["ball_tree"]
+    
     database_opts = [
         ds.load_breast_cancer,
         ds.load_digits,
@@ -36,6 +35,6 @@ if __name__ == "__main__":
             if result["method"] != "brute_force":
                 brute_predict_duration = next(item["predict_duration_seconds"] for item in results if item["method"] == "brute_force" and item["k"] == result["k"])
                 improv = (1 - (result["predict_duration_seconds"]/brute_predict_duration)) * 100
-            result["predict_performance_improv"] = f"{math.trunc(improv)}%"
+            result["predict_performance_improv_%"] = math.trunc(improv)
         print(tabulate(results, headers="keys", tablefmt="rounded_grid"))
 

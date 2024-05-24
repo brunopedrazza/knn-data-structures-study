@@ -1,9 +1,9 @@
 from time import perf_counter
 from sklearn.model_selection import train_test_split
+from knn import KNN
 
 import sklearn.metrics as metrics
 
-from knn import KNN
 
 def collect_metrics(X, y, k, method, leaf_size=None, num_calls=100):
     if not leaf_size and method not in ("kd_tree", "ball_tree"):
