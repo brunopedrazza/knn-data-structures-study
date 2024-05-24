@@ -1,8 +1,7 @@
-from sklearn import datasets as ds
 import math
-from tabulate import tabulate
-from sklearn.neighbors import KNeighborsClassifier
 
+from sklearn import datasets as ds
+from tabulate import tabulate
 from metrics_collector import collect_metrics
 
 if __name__ == "__main__":
@@ -24,11 +23,13 @@ if __name__ == "__main__":
     for db_method in database_opts:
         results = []
         X, y = db_method(return_X_y=True)
+        method_name = db_method.__name__
         print()
-        print(f"{db_method.__name__.partition("_")[2]}, n_samples={len(X)}, n_dimensions={len(X[0])}")
+        print(f"{method_name.partition("_")[2]}, n_samples={len(X)}, n_dimensions={len(X[0])}")
+        num_calls = 1 if len(X) > 5_000 else 100
         for k in range(k_start, k_end+1, k_step):
             for method in methods:
-                result = collect_metrics(X, y, k, method, leaf_size)
+                result = collect_metrics(X, y, k, method, leaf_size, num_calls=num_calls)
                 results.append(result)
         for result in results:
             improv = 0
