@@ -1,78 +1,40 @@
-import numpy as np
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-import sklearn.metrics as metrics
+from sklearn import datasets as ds
+import math
+from tabulate import tabulate
+from sklearn.neighbors import KNeighborsClassifier
 
-from knn import KNN
-from utils import KNeighborsClassifierW
+from metrics_collector import collect_metrics
 
 if __name__ == "__main__":
-    dataset = datasets.load_digits()
-    data = dataset.data
-    target = dataset.target
-    k = 5
+    k_start, k_end, k_step = (3, 7, 2)
 
-    # data, target = datasets.make_classification(
-    #     n_samples=30000, 
-    #     n_features=15, 
-    #     n_informative=15, 
-    #     n_redundant=0, 
-    #     n_repeated=0, 
-    #     n_classes=10, 
-    #     shuffle=True, 
-    #     random_state=42)
+    leaf_size = 100
+    methods = ["brute_force", "kd_tree", "ball_tree"]
+    # methods = ["kd_tree", "ball_tree"]
+    # methods = ["ball_tree"]
+    database_opts = [
+        ds.load_breast_cancer,
+        ds.load_digits,
+        ds.load_iris,
+        ds.load_wine,
+        ds.fetch_olivetti_faces,
+        ds.fetch_covtype
+    ]
     
-    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=42)
-    print("Len X_train " + str(len(X_train)))
-    print("Len X_test " + str(len(X_test)))
-    print("dimensions " + str(len(X_train[0])))
-    # print("n classes " + str(len()))
-
-    # my kd tree leaf
-    knn = KNN(k=k, method="kd_tree", leaf_size=100)
-    knn.fit(X_train, y_train)
-    y_pred, distance_count = knn.predict(X_test)
-
-    acc = metrics.accuracy_score(y_test, y_pred)
-    print(f"pred my kd tree acc: {acc*100:.2f}%")
-    print(f"distance count: {distance_count}")
-    print()
-
-    # my ball tree leaf
-    knn = KNN(k=k, method="ball_tree", leaf_size=100)
-    knn.fit(X_train, y_train)
-    y_pred, distance_count = knn.predict(X_test)
-
-    acc = metrics.accuracy_score(y_test, y_pred)
-    print(f"pred my ball tree acc: {acc*100:.2f}%")
-    print(f"distance count: {distance_count}")
-    print()
-
-    # my brute force
-    # knn = KNN(k=k, method="brute_force")
-    # knn.fit(X_train, y_train)
-    # y_pred, distance_count = knn.predict(X_test)
-
-    # acc = metrics.accuracy_score(y_test, y_pred)
-    # print(f"pred my brute acc: {acc*100:.2f}%")
-    # print(f"distance count: {distance_count}")
-    # print()
-
-    # sklearn kd tree
-    knn2 = KNeighborsClassifierW(n_neighbors=k, algorithm="kd_tree")
-    knn2.fit(X_train, y_train)
-    y_pred2 = knn2.predict(X_test)
-
-    acc2 = metrics.accuracy_score(y_test, y_pred2)
-    print(f"pred kd_tree sklearn acc: {acc2*100:.2f}%")
-    print()
-
-    # sklearn ball tree
-    knn2 = KNeighborsClassifierW(n_neighbors=k, algorithm="ball_tree")
-    knn2.fit(X_train, y_train)
-    y_pred2 = knn2.predict(X_test)
-
-    acc2 = metrics.accuracy_score(y_test, y_pred2)
-    print(f"pred ball_tree sklearn acc: {acc2*100:.2f}%")
-    print()
+    for db_method in database_opts:
+        results = []
+        X, y = db_method(return_X_y=True)
+        print()
+        print(f"{db_method.__name__.partition("_")[2]}, n_samples={len(X)}, n_dimensions={len(X[0])}")
+        for k in range(k_start, k_end+1, k_step):
+            for method in methods:
+                result = collect_metrics(X, y, k, method, leaf_size)
+                results.append(result)
+        for result in results:
+            improv = 0
+            if result["method"] != "brute_force":
+                brute_predict_duration = next(item["predict_duration_seconds"] for item in results if item["method"] == "brute_force" and item["k"] == result["k"])
+                improv = (1 - (result["predict_duration_seconds"]/brute_predict_duration)) * 100
+            result["predict_performance_improv"] = f"{math.trunc(improv)}%"
+        print(tabulate(results, headers="keys", tablefmt="rounded_grid"))
 
