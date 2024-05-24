@@ -1,14 +1,12 @@
 from time import perf_counter
-
-from numpy import ndarray
-import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
 from scipy.spatial import distance
+
+import numpy as np
 
 def divide_chunks(l, n):
     for i in range(0, len(l), n):  
         yield l[i:i + n] 
-        
+
 
 def measure_execution_time(func):
     def wrapper(*args, **kwargs):
@@ -24,13 +22,3 @@ def euclidean_distance(p1, p2, squared=False):
         dist = np.sum(np.square(p1 - p2))
         return dist if squared else np.sqrt(dist)
     return distance.cdist(p1, p2, 'euclidean')
-
-class KNeighborsClassifierW(KNeighborsClassifier):
-
-    @measure_execution_time
-    def predict(self, X) -> ndarray:
-        return super().predict(X)
-    
-    @measure_execution_time
-    def fit(self, X, y) -> ndarray:
-        return super().fit(X, y)

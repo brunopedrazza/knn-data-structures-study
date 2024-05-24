@@ -1,9 +1,9 @@
 from sklearn import datasets
 from sklearn.decomposition import PCA
+from knn import KNN
+
 import matplotlib.pyplot as plt
 import numpy as np
-
-from knn import KNN
 import random_data
 
 

@@ -128,15 +128,3 @@ if __name__ == "__main__":
     print(h)
     print(h.remove())
     print(h)
-
-    # x = [22,8,13,3,56,90]
-    # h = MaxHeap(x=x, k=6)
-    # print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
-    # print(h.remove())
-    # print(h)
