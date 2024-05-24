@@ -4,7 +4,7 @@ from knn import KNN
 
 import matplotlib.pyplot as plt
 import numpy as np
-import random_data
+import helpers.random_data as random_data
 
 
 if __name__ == "__main__":

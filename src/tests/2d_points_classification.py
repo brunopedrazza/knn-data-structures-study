@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from ball_tree import BallTree
+from trees.ball_tree import BallTree
 from knn import KNN
 
 if __name__ == "__main__":
