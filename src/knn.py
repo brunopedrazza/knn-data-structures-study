@@ -3,7 +3,7 @@ import scipy
 
 from kd_tree import KdTree
 from ball_tree import BallTree
-from utils import measure_execution_time, euclidean_distance
+from utils import euclidean_distance
 
 
 class KNN:
@@ -21,7 +21,6 @@ class KNN:
         self._y_train_indices = None
         self._sample_size = None
 
-    @measure_execution_time
     def fit(self, X_train, y_train):
         y_train = np.array(y_train)
         if y_train.ndim != 1:
@@ -49,7 +48,6 @@ class KNN:
 
         return best_idxs
 
-    @measure_execution_time
     def predict(self, X_test):
         _X_test = np.array(X_test)
         _classes = self._classes
