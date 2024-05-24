@@ -1,12 +1,13 @@
 import numpy as np
 import scipy
 
-from kd_tree import KdTree
-from ball_tree import BallTree
-from utils import euclidean_distance
+from trees.kd_tree import KdTree
+from trees.ball_tree import BallTree
+from helpers.utils import euclidean_distance
 
 
 class KNN:
+    
     def __init__(self, k = 3, method="brute_force", leaf_size=30):
         if method not in ("brute_force", "kd_tree", "ball_tree"):
             raise ValueError("Invalid method")

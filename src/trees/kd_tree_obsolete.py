@@ -1,7 +1,7 @@
 import numpy as np
 
-from heap import MaxHeap
-from utils import euclidean_distance
+from helpers.heap import MaxHeap
+from helpers.utils import euclidean_distance
 
 
 class KdTreeNode:

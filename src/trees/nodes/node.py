@@ -1,0 +1,3 @@
+class Node:
+    
+    def __init__(self, X, X_idx, leaf_size, depth): ...
