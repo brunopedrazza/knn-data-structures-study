@@ -24,10 +24,17 @@ class KNN:
 
     def fit(self, X_train, y_train):
         y_train = np.array(y_train)
+        y_train = np.ravel(y_train)
+        
         if y_train.ndim != 1:
             raise ValueError("Dataset target must have only 1 dimension.")
         
-        self._target = np.array(y_train)
+        # remove duplicated points
+        _, unique_indices = np.unique(X_train, axis=0, return_index=True)
+        X_train = X_train[unique_indices]
+        y_train = y_train[unique_indices]
+
+        self._target = y_train
         
         self._classes, indices = np.unique(y_train, return_inverse=True)
         self._sample_size = len(X_train)
@@ -59,13 +66,13 @@ class KNN:
             best_idxs = self.__compute_distances(_X_test)
             distance_count = self._X_train.shape[0] * _X_test.shape[0]
         elif self._method in ("kd_tree", "ball_tree"):
-            best_idxs = self._tree.predict(_X_test, k=self._k)
+            best_idxs = self._tree.predict(_X_test)
             distance_count = self._tree.distance_count
 
         n_classes = len(_classes)
         n_X_test = len(_X_test)
 
-        y_pred = np.empty((n_X_test, n_classes), dtype=_classes[0].dtype)
+        y_pred = np.empty((n_X_test, n_classes), dtype=_classes.dtype)
         mode = scipy.stats.mode(_y_train_idxs[best_idxs], axis=1, keepdims=True).mode
         mode = np.asarray(np.ravel(mode))
         y_pred = _classes.take(mode)
