@@ -163,3 +163,6 @@ cython_debug/
 .vscode
 
 *.DS_Store
+
+# ignore datasets csv files
+assets/datasets/*.csv
