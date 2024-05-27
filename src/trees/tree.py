@@ -12,11 +12,11 @@ class ClassificationTree:
         self._k = k
         self.distance_count = 0
 
-    def predict(self, X, k, prediction_method):
-        best_idxs = np.empty((X.shape[0], k), dtype=np.int32)
+    def predict(self, X, prediction_method):
+        best_idxs = np.empty((X.shape[0], self._k), dtype=np.int32)
         
         for i, x in enumerate(X):
-            mh = prediction_method(self._root, x, MaxHeap(k=k))
+            mh = prediction_method(self._root, x, MaxHeap(k=self._k))
             best_idxs[i] = np.array(mh.heap)[:, 1]
 
         return best_idxs

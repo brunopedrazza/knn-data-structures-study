@@ -21,12 +21,12 @@ class BallTree(ClassificationTree):
             mh = self.__predict(good, target, mh)
 
             distance_to_hyperplane = abs(projection - current.median)
-            if mh.heap[0][0] > distance_to_hyperplane or not mh.is_full():
+            if not mh.is_full() or mh.heap[0][0] > distance_to_hyperplane:
                 mh = self.__predict(bad, target, mh)
         else:
             return super().calculate_distances_leaf(current.X, current.X_idx, target, mh)
         
         return mh
     
-    def predict(self, X, k):
-        return super().predict(X, k, self.__predict)
+    def predict(self, X):
+        return super().predict(X, self.__predict)

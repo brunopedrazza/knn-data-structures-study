@@ -18,13 +18,13 @@ class KdTree(ClassificationTree):
             
             mh = self.__predict(good, target, mh)
 
-            r_ = target[axis] - current.split_value
-            if not mh.is_full() or mh.heap[0][0] >= abs(r_):
+            r_ = abs(target[axis] - current.split_value)
+            if not mh.is_full() or mh.heap[0][0] >= r_:
                 mh = self.__predict(bad, target, mh)
         else:
             return super().calculate_distances_leaf(current.X, current.X_idx, target, mh)
 
         return mh
     
-    def predict(self, X, k):
-        return super().predict(X, k, self.__predict)
+    def predict(self, X):
+        return super().predict(X, self.__predict)
