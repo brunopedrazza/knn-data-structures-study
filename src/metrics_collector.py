@@ -29,9 +29,11 @@ def collect_metrics(X, y, k, method, leaf_size=None, num_calls=100):
     acc = metrics.accuracy_score(y_test, y_pred)
     return {
         "k": k,
+        "n_train": len(X_train),
+        "n_test": len(X_test),
         "method": method,
         "fit_duration_ms": (fit_duration_seconds / num_calls) * 1000,
         "predict_duration_seconds": predict_duration_seconds / num_calls,
-        "accuracy": acc,
+        "accuracy": f"{acc*100:.2f}%",
         "distance_count": distance_count
     }
