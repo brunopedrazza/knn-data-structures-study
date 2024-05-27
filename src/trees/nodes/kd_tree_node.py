@@ -23,9 +23,7 @@ class KdTreeNode(Node):
         n = X.shape[0]
 
         if n <= leaf_size:
-            self.X = X
-            self.X_idx = X_idx
-            self.is_leaf = True
+            self.create_leaf(X, X_idx)
             return
         
         mid = n // 2

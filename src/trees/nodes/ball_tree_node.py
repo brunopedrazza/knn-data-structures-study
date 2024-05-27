@@ -17,11 +17,8 @@ class BallTreeNode(Node):
         self.median = None
         
         n = X.shape[0]
-
         if n <= leaf_size:
-            self.X = X
-            self.X_idx = X_idx
-            self.is_leaf = True
+            self.create_leaf(X, X_idx)
             return
         
         rand_idx = np.random.randint(X.shape[0])
@@ -35,7 +32,7 @@ class BallTreeNode(Node):
 
         # Calculate the line vector between them
         self.line_vector = second_farthest_point - farthest_point
-
+        
         # Project all points onto this line
         projections = np.dot(X, self.line_vector) / np.linalg.norm(self.line_vector)
         
@@ -43,7 +40,6 @@ class BallTreeNode(Node):
         self.median = np.median(projections)
         left_idx = projections <= self.median
         right_idx = projections > self.median
-
-        # Recursive construction of the tree
+        
         self.left = BallTreeNode(X[left_idx], X_idx[left_idx], leaf_size, depth+1)
         self.right = BallTreeNode(X[right_idx], X_idx[right_idx], leaf_size, depth+1)
