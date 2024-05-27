@@ -166,3 +166,6 @@ cython_debug/
 
 # ignore datasets csv files
 assets/datasets/*.csv
+
+# ignore results csv files
+assets/results/*.csv
