@@ -1,7 +1,9 @@
 from time import perf_counter
 from scipy.spatial import distance
 
+import os
 import numpy as np
+
 
 def divide_chunks(l, n):
     for i in range(0, len(l), n):  
@@ -17,8 +19,15 @@ def measure_execution_time(func):
         return result
     return wrapper
 
+
 def euclidean_distance(p1, p2, squared=False):
     if len(p1.shape) == 1:
         dist = np.sum(np.square(p1 - p2))
         return dist if squared else np.sqrt(dist)
     return distance.cdist(p1, p2, 'euclidean')
+
+
+def get_results_directory():
+    current_directory = os.getcwd()
+    return os.path.join(current_directory, "assets/results")
+
