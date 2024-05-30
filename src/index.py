@@ -61,6 +61,8 @@ if __name__ == "__main__":
     results = []
     for db_data in dbs_data:
         X, y, metadata = db_data
+        now = datetime.now().strftime('%H:%M:%S')
+        print(f"\n({now}) Classification of dataset {metadata.name} has started...")
         num_calls = 1 if len(X) > 20_000 else max_num_calls
         for k in range(k_start, k_end+1, k_step):
             for method in methods:
@@ -75,6 +77,9 @@ if __name__ == "__main__":
                 result = collect_metrics(X, y, k, method, leaf_size, num_calls=num_calls)
                 data.update(result)
                 results.append(data)
+
+        now = datetime.now().strftime('%H:%M:%S')
+        print(f"({now}) Classification of dataset {metadata.name} has ended.")
     
     file_name = save_results_csv(results)
 

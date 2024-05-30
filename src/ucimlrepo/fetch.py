@@ -105,9 +105,11 @@ def fetch_ucirepo(
     df = None
     if os.path.exists(file_path):
         # if the file exists, load it into a DataFrame
+        print(f"Loading dataset {name}...")
         df = pd.read_csv(file_path)
     else:
         try:
+            print(f"Downloading dataset {name}...")
             open(file_path, 'x').close()
 
             urllib.request.urlretrieve(data_url, file_path)
