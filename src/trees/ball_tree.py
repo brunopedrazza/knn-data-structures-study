@@ -12,7 +12,7 @@ class BallTree(ClassificationTree):
 
     def __predict(self, current: BallTreeNode, target, mh: MaxHeap):
         if not current.is_leaf:
-            projection = np.dot(target, current.line_vector) / np.linalg.norm(current.line_vector)
+            projection = np.dot(target, current.line_vector) / current.transp
             if projection <= current.median:
                 good, bad = current.left, current.right
             else:
