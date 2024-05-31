@@ -3,8 +3,8 @@ import os
 import sys
 
 from datetime import datetime
-from metrics_collector import collect_metrics
-from show_results import print_results
+from metricscollector import collect_metrics
+from showresults import print_results
 from ucimlrepo.fetch import fetch_ucirepo
 from helpers.utils import get_results_directory
 

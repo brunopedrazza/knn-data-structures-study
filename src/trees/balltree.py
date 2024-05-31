@@ -1,6 +1,6 @@
 import numpy as np
 
-from trees.nodes.ball_tree_node import BallTreeNode
+from trees.nodes.balltreenode import BallTreeNode
 from helpers.heap import MaxHeap
 from trees.tree import ClassificationTree
 

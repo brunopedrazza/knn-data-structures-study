@@ -1,4 +1,4 @@
-from trees.nodes.kd_tree_node import KdTreeNode, KdTreeOptNode, Node
+from trees.nodes.kdtreenode import KdTreeNode, KdTreeOptNode, Node
 from helpers.heap import MaxHeap
 from trees.tree import ClassificationTree
 

@@ -1,8 +1,8 @@
 import numpy as np
 import scipy
 
-from trees.kd_tree import KdTree
-from trees.ball_tree import BallTree
+from trees.kdtree import KdTree
+from trees.balltree import BallTree
 from helpers.utils import euclidean_distance
 
 
