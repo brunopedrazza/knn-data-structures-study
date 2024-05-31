@@ -1,14 +1,15 @@
-from trees.nodes.kd_tree_node import KdTreeNode
+from trees.nodes.kd_tree_node import KdTreeNode, KdTreeOptNode, Node
 from helpers.heap import MaxHeap
 from trees.tree import ClassificationTree
 
 
 class KdTree(ClassificationTree):
 
-    def __init__(self, X, k, leaf_size):
-        super().__init__(X, k, leaf_size, KdTreeNode)
+    def __init__(self, X, k, leaf_size, optimized=False):
+        node = KdTreeOptNode if optimized else KdTreeNode
+        super().__init__(X, k, leaf_size, node)
 
-    def __predict(self, current: KdTreeNode, target, mh: MaxHeap):
+    def __predict(self, current: Node, target, mh: MaxHeap):
         if not current.is_leaf:
             axis = current.axis
             if target[axis] < current.split_value:

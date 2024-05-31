@@ -6,7 +6,7 @@ import sklearn.metrics as metrics
 
 
 def collect_metrics(X, y, k, method, leaf_size=None, num_calls=100):
-    if not leaf_size and method not in ("kd_tree", "ball_tree"):
+    if not leaf_size and method not in ("kd_tree", "kd_tree_opt", "ball_tree"):
         raise ValueError("Leaf size is required when method is tree based")
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=42)
