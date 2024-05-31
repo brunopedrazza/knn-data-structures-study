@@ -1,8 +1,10 @@
 import csv
 import os
+import sys
 
 from datetime import datetime
 from metrics_collector import collect_metrics
+from show_results import print_results
 from ucimlrepo.fetch import fetch_ucirepo
 from helpers.utils import get_results_directory
 
@@ -27,14 +29,28 @@ def save_results_csv(results):
 
 
 if __name__ == "__main__":
-    k_start, k_end, k_step = (3, 7, 2)
+
+    option_err_message = "Please choose whether you want to save the results or print then, with --save or --print"
+    try:
+        option = sys.argv[1]
+        if option != "--save" and option != "--print":
+            raise ValueError()
+    except IndexError:
+        print(option_err_message)
+        exit()
+    except ValueError:
+        print(option_err_message)
+        exit()
+
+    k_start, k_end, k_step = (1, 5, 2)
 
     leaf_size = 100
     max_num_calls = 100
     methods = [
         "brute_force",
         "kd_tree",
-        "ball_tree",
+        "kd_tree_opt",
+        "ball_tree"
     ]
 
     database_ids = [
@@ -80,7 +96,10 @@ if __name__ == "__main__":
 
         now = datetime.now().strftime('%H:%M:%S')
         print(f"({now}) Classification of dataset {metadata.name} has ended.")
-    
-    file_name = save_results_csv(results)
 
-    print(f"\nGenerated csv file with results: {file_name}")
+
+    if option == "--save":
+        file_name = save_results_csv(results)
+        print(f"\nGenerated csv file with results: {file_name}")
+    elif option == "--print":
+        print_results(results=results)
