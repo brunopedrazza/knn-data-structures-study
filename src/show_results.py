@@ -7,15 +7,23 @@ from tabulate import tabulate
 from helpers.utils import get_results_directory
 
 
-def print_results(file_name):
-    result_directory = get_results_directory()
-    file_path = os.path.join(result_directory, file_name)
+def print_results(file_name=None, results=None):
+    if not file_name and not results:
+        raise ValueError("File name or actual results are required")
+    
+    if not results:
+        result_directory = get_results_directory()
+        file_path = os.path.join(result_directory, file_name)
 
+        results = []
+        with open(file_path, mode="r", newline="") as file:
+            reader = csv.DictReader(file, delimiter=";")
+            for row in reader:
+                results.append(row)
+    
     db_groups = defaultdict(list)
-    with open(file_path, mode="r", newline="") as file:
-        reader = csv.DictReader(file, delimiter=";")
-        for row in reader:
-            db_groups[row["db_id"]].append(row)
+    for row in results:
+        db_groups[row["db_id"]].append(row)
     
     for db_id, db_results in db_groups.items():
         db_metadata = db_results[0]
@@ -45,6 +53,6 @@ def print_results(file_name):
 if __name__ == "__main__":
     try:
         file_name = sys.argv[1]
-        print_results(file_name)
+        print_results(file_name=file_name)
     except IndexError:
         print("\nPlease provide the file name to show results.")
