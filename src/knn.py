@@ -24,8 +24,10 @@ class KNN:
 
     def fit(self, X_train, y_train):
         y_train = np.array(y_train)
+        X_train = np.array(X_train)
+
         y_train = np.ravel(y_train)
-        
+
         if y_train.ndim != 1:
             raise ValueError("Dataset target must have only 1 dimension.")
         

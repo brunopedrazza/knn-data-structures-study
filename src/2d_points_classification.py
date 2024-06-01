@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-from trees.balltree import BallTree
 from knn import KNN
+from trees.vptree import VPTree
 
 if __name__ == "__main__":
     points = [
@@ -13,15 +13,13 @@ if __name__ == "__main__":
         "red", "red", "red", "red", "red", "blue"
     ]
 
-    bt = BallTree(points, 3, 2)
-    print(bt)
-    
     new_points = [[1,1],[2,3],[4,4]]
 
     knn = KNN(k=1, method="kd_tree", leaf_size=3)
     knn.fit(points, targets)
-    new_classes = knn.predict(new_points)[0]
+    new_classes, dc = knn.predict(new_points)
 
+    print(dc)
     # Visualize
     
     grey = "#7d7979"
