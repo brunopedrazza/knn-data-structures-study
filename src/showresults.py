@@ -27,10 +27,12 @@ def print_results(file_name=None, results=None):
     
     for db_id, db_results in db_groups.items():
         db_metadata = db_results[0]
+        db_name, n_samples, n_dimensions = db_metadata["db_name"], db_metadata["n_samples"], db_metadata["n_dimensions"]
         print()
-        print(f"id {db_id} ({db_metadata["db_name"]}), n_samples={db_metadata["n_samples"]}, n_dimensions={db_metadata["n_dimensions"]}")
+        print(f"id {db_id} ({db_name}), n_samples={n_samples}, n_dimensions={n_dimensions}")
         results = []
         for db_result in db_results:
+            accuracy = db_result["accuracy"]
             result = {
                 "k": db_result["k"],
                 "method": db_result["method"],
@@ -38,7 +40,7 @@ def print_results(file_name=None, results=None):
                 "n_test": db_result["n_test"],
                 "fit_duration_ms": float(db_result["fit_duration_seconds"]) * 1000,
                 "predict_duration_seconds": db_result["predict_duration_seconds"],
-                "accuracy": f"{float(db_result["accuracy"])*100:.2f}%",
+                "accuracy": f"{float(accuracy)*100:.2f}%",
                 "distance_count": db_result["distance_count"],
             }
             improv = 0
