@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from knn import KNN
-from trees.vptree import VPTree
+
 
 if __name__ == "__main__":
     points = [
@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     new_points = [[1,1],[2,3],[4,4]]
 
-    knn = KNN(k=1, method="kd_tree", leaf_size=3)
+    knn = KNN(k=4, method="vp_tree", leaf_size=3)
     knn.fit(points, targets)
     new_classes, dc = knn.predict(new_points)
 

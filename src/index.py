@@ -45,27 +45,28 @@ if __name__ == "__main__":
     k_start, k_end, k_step = (1, 5, 2)
 
     leaf_size = 100
-    max_num_calls = 100
+    max_num_calls = 1
     methods = [
-        "brute_force",
-        "kd_tree",
+        # "brute_force",
+        # "kd_tree",
         "kd_tree_opt",
-        "ball_tree"
+        "ball_tree",
+        "vp_tree"
     ]
 
     database_ids = [
-        53,     # Iris (very low instances (very low instances - 150, low dimensions - 4) - https://archive.ics.uci.edu/dataset/53/iris
-        110,    # Yeast (low instances (low instances - 1484, low dimensions - 8) - https://archive.ics.uci.edu/dataset/110/yeast
-        229,    # Skin Segmentation (high instances - 245057, low dimensions - 3) - https://archive.ics.uci.edu/dataset/229/skin+segmentation
+        # 53,     # Iris (very low instances (very low instances - 150, low dimensions - 4) - https://archive.ics.uci.edu/dataset/53/iris
+        # 110,    # Yeast (low instances (low instances - 1484, low dimensions - 8) - https://archive.ics.uci.edu/dataset/110/yeast
+        # 229,    # Skin Segmentation (high instances - 245057, low dimensions - 3) - https://archive.ics.uci.edu/dataset/229/skin+segmentation
         31,     # Covertype (high instances - 581012, high dimensions - 54) - https://archive.ics.uci.edu/dataset/31/covertype
-        602,    # Dry Bean (medium instances - 13611, medium dimensions - 16) - https://archive.ics.uci.edu/dataset/602/dry+bean+dataset
-        372,    # HTRU2 (medium instances - 17898, low dimensions - 8) - https://archive.ics.uci.edu/dataset/372/htru2
-        80,     # Optical Recognition of Handwritten Digits (low instances - 5620, high dimensions - 64) - https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits
-        891,    # CDC Diabetes Health Indicators (high instances - 253680, medium dimensions - 21) - https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators
-        78,     # Page Blocks Classification (medium instances - 5473, medium dimensions - 10) - https://archive.ics.uci.edu/dataset/78/page+blocks+classification
-        545,    # Rice (Cammeo and Osmancik) (medium instances - 3810, medium dimensions - 7) - https://archive.ics.uci.edu/dataset/545/rice+cammeo+and+osmancik
-        159,    # MAGIC Gamma Telescope (medium instances - 19020, medium dimensions - 10) - https://archive.ics.uci.edu/dataset/159/magic+gamma+telescope
-        148,    # Statlog (Shuttle) (high instances - 58000, medium dimensions - 7) - https://archive.ics.uci.edu/dataset/148/statlog+shuttle
+        # 602,    # Dry Bean (medium instances - 13611, medium dimensions - 16) - https://archive.ics.uci.edu/dataset/602/dry+bean+dataset
+        # 372,    # HTRU2 (medium instances - 17898, low dimensions - 8) - https://archive.ics.uci.edu/dataset/372/htru2
+        # 80,     # Optical Recognition of Handwritten Digits (low instances - 5620, high dimensions - 64) - https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits
+        # 891,    # CDC Diabetes Health Indicators (high instances - 253680, medium dimensions - 21) - https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators
+        # 78,     # Page Blocks Classification (medium instances - 5473, medium dimensions - 10) - https://archive.ics.uci.edu/dataset/78/page+blocks+classification
+        # 545,    # Rice (Cammeo and Osmancik) (medium instances - 3810, medium dimensions - 7) - https://archive.ics.uci.edu/dataset/545/rice+cammeo+and+osmancik
+        # 159,    # MAGIC Gamma Telescope (medium instances - 19020, medium dimensions - 10) - https://archive.ics.uci.edu/dataset/159/magic+gamma+telescope
+        # 148,    # Statlog (Shuttle) (high instances - 58000, medium dimensions - 7) - https://archive.ics.uci.edu/dataset/148/statlog+shuttle
     ]
     
     dbs_data = []

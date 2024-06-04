@@ -21,7 +21,7 @@ def measure_execution_time(func):
 
 
 def euclidean_distance(p1, p2, squared=False):
-    if len(p1.shape) == 1:
+    if not hasattr(p1, "shape") or len(p1.shape) == 1:
         dist = np.sum(np.square(p1 - p2))
         return dist if squared else np.sqrt(dist)
     return distance.cdist(p1, p2, 'euclidean')
