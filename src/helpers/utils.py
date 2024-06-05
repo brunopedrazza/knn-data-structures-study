@@ -31,3 +31,9 @@ def get_results_directory():
     current_directory = os.getcwd()
     return os.path.join(current_directory, "assets/results")
 
+
+def find_farthest_point(X, point):
+    distances = np.linalg.norm(X - point, axis=1)
+    farthest_idx = np.argmax(distances)
+    return X[farthest_idx]
+

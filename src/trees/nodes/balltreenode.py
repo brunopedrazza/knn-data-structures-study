@@ -1,11 +1,7 @@
 import numpy as np
 
+from helpers.utils import find_farthest_point
 from trees.nodes.node import Node
-
-def find_farthest_point(X, point):
-    distances = np.linalg.norm(X - point, axis=1)
-    farthest_idx = np.argmax(distances)
-    return X[farthest_idx]
 
 
 class BallTreeNode(Node):
@@ -23,7 +19,7 @@ class BallTreeNode(Node):
             self.create_leaf(X, X_idx)
             return
         
-        rand_idx = np.random.randint(X.shape[0])
+        rand_idx = np.random.randint(n)
         rand_point = X[rand_idx]
         
         # Find the most distant point from the randomly picked point
