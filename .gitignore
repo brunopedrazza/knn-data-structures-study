@@ -169,3 +169,6 @@ assets/datasets/*.csv
 
 # ignore results csv files
 assets/results/*.csv
+
+# ignore plot images
+assets/plots/*.png
