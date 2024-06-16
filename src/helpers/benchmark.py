@@ -5,7 +5,7 @@ from knn import KNN
 import sklearn.metrics as metrics
 
 
-def collect_metrics(X, y, k, method, leaf_size=None, num_calls=100):
+def benchmark(X, y, k, method, leaf_size=None, num_calls=100):
     if not leaf_size and method not in ("kd_tree", "kd_tree_opt", "ball_tree"):
         raise ValueError("Leaf size is required when method is tree based")
 
@@ -35,3 +35,31 @@ def collect_metrics(X, y, k, method, leaf_size=None, num_calls=100):
         "accuracy": acc,
         "distance_count": distance_count
     }
+
+def bench_fit_duration(X, y, k, method, num_calls=100):
+    fit_duration_seconds = 0
+    for _ in range(0, num_calls):
+        knn = KNN(k=k, method=method, leaf_size=2)
+
+        tic = perf_counter()
+        knn.fit(X, y)
+        toc = perf_counter()
+        fit_duration_seconds += (toc - tic)
+
+    return fit_duration_seconds / num_calls
+
+def bench_predict_duration(X, y,  k, method, num_calls=100):
+    X_train, X_test, y_train, _ = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=42)
+
+    predict_duration_seconds = 0
+    for _ in range(0, num_calls):
+        knn = KNN(k=k, method=method, leaf_size=50)
+
+        knn.fit(X_train, y_train)
+
+        tic = perf_counter()
+        knn.predict(X_test)
+        toc = perf_counter()
+        predict_duration_seconds += (toc - tic)
+
+    return predict_duration_seconds / num_calls
