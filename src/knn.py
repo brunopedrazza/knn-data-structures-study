@@ -8,8 +8,26 @@ from helpers.utils import euclidean_distance
 
 
 class KNN:
+    """ K-nearest neighbors classifier.
+
+    Parameters
+    ----------
+    k : int, default=3
+        Number of neighbors to use by default.
+
+    method : {'brute_force', 'kd_tree', 'ball_tree', 'vp_tree'}, default='brute_force'
+        Method used to compute the nearest neighbors:
+
+        - 'brute_force' will use a brute-force search.
+        - 'kd_tree' will use :class:`KdTree`
+        - 'ball_tree' will use :class:`BallTree`
+        - 'vp_tree' will use :class:`VpTree`
     
-    def __init__(self, k = 3, method="brute_force", leaf_size=30):
+    leaf_size : int, default=30
+        Leaf size passed to BallTree, KdTree or VpTree.
+    """
+
+    def __init__(self, k=3, method="brute_force", leaf_size=30):
         if method not in ("brute_force", "kd_tree", "ball_tree", "vp_tree"):
             raise ValueError("Invalid method")
         if leaf_size <= 1:
@@ -26,6 +44,17 @@ class KNN:
         self._sample_size = None
 
     def fit(self, X_train, y_train):
+        """ Method that fits training data. It will use the tree structures or plain storing.
+
+        Parameters
+        ----------
+        X_train : array
+            Training data.
+        
+        y_train : array
+            Classification of the training data.
+        """
+
         y_train = np.array(y_train)
         X_train = np.array(X_train)
 
@@ -33,6 +62,8 @@ class KNN:
 
         if y_train.ndim != 1:
             raise ValueError("Dataset target must have only 1 dimension.")
+        if X_train.shape[0] != y_train.shape[0]:
+            raise ValueError("Training data and targets must have the same size.")
         
         # remove duplicated points
         _, unique_indices = np.unique(X_train, axis=0, return_index=True)
@@ -55,6 +86,10 @@ class KNN:
             self._tree = VpTree(X_train, k=self._k, leaf_size=self._leaf_size)
     
     def __compute_distances(self, X_test):
+        """ Internal method used for brute force. It iterates through all test points, 
+        calculate all distances, sorts it and store the k best neighbors.
+        """
+
         best_idxs = np.empty((X_test.shape[0], self._k), dtype=np.int32)
 
         for i, target in enumerate(X_test):
@@ -64,6 +99,15 @@ class KNN:
         return best_idxs
 
     def predict(self, X_test):
+        """ Predict the classes for the testing set. Uses different mehods to do so, 
+        according to what was used to fit.
+
+        Parameters
+        ----------
+        X_test : array
+            Training data.
+        """
+
         _X_test = np.array(X_test)
         _classes = self._classes
         _y_train_idxs = self._y_train_indices
