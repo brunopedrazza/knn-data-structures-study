@@ -9,6 +9,11 @@ def parent_pos(pos):
     return int((pos - 1)/2)
 
 class MaxHeap:
+    """ Class that defines a MaxHeap structure. Used to keep the k best neighbors on knn.
+
+    The first element of the heap is always the most distant neighbor.
+    """
+
     def __init__(self, X=None, k=None):
         self.k = k
         self.heap = []

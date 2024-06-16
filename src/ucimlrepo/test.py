@@ -1,35 +1,34 @@
 import unittest
-# from ucimlrepo import list_available_datasets, fetch_ucirepo
-from ucimlrepo import fetch_ucirepo, list_available_datasets
+from ucimlrepo.fetch import fetch_ucirepo, list_available_datasets
 
 class TestMLRepo(unittest.TestCase):
-    def test_invalid_inputs(self):
-        with self.assertRaises(ValueError):
-           fetch_ucirepo(id=1, name='Abalone')
-
-        with self.assertRaises(ValueError):
-           fetch_ucirepo()
-
-        with self.assertRaises(ValueError):
-           fetch_ucirepo(id='Abalone')
-
-        with self.assertRaises(ValueError):
-           fetch_ucirepo(name=1)
-
-    def test_list(self):
+   def test_invalid_inputs(self):
       with self.assertRaises(ValueError):
-        list_available_datasets(area='health and medicin')
+         fetch_ucirepo(id=1, name='Abalone')
+
+      with self.assertRaises(ValueError):
+         fetch_ucirepo()
+
+      with self.assertRaises(ValueError):
+         fetch_ucirepo(id='Abalone')
+
+      with self.assertRaises(ValueError):
+         fetch_ucirepo(name=1)
+
+   def test_list(self):
+      with self.assertRaises(ValueError):
+         list_available_datasets(area='health and medicin')
       #  list_available_datasets(area='climate and environment')  
 
-    def test_nonexistent_dataset(self):
-       with self.assertRaises(Exception):
-          fetch_ucirepo(id=2000)
+   def test_nonexistent_dataset(self):
+      with self.assertRaises(Exception):
+         fetch_ucirepo(id=2000)
 
-    def test_unavailable_dataset(self):
-        with self.assertRaises(Exception):
-          fetch_ucirepo(id=34)
+   def test_unavailable_dataset(self):
+      with self.assertRaises(Exception):
+         fetch_ucirepo(id=34)
 
-    def test_heart_disease(self):
+   def test_heart_disease(self):
       heart_disease = fetch_ucirepo(id=45)
       # print(heart_disease.attributes)
       # print(heart_disease.data.original.head())
@@ -40,7 +39,7 @@ class TestMLRepo(unittest.TestCase):
       # attribute metadata should have been moved
       self.assertIsNone(heart_disease.metadata.variables)
       self.assertIsNone(heart_disease.attributes)
-      
+
       # dataset has no IDs
       self.assertIsNone(heart_disease.data.ids)
 
@@ -48,12 +47,10 @@ class TestMLRepo(unittest.TestCase):
       self.assertEqual(heart_disease.data.targets.shape, (303, 1))
 
       self.assertEqual(heart_disease.variables['name'][0], 'age')
-
-       
         
 
 if __name__ == '__main__':
-  unittest.main()
+   unittest.main()
 
 
 # conda activate pandas_env

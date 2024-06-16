@@ -32,7 +32,7 @@ def fetch_ucirepo(
         name: Optional[str] = None, 
         id: Optional[int] = None
     ):
-    '''
+    """
     Loads a dataset from the UCI ML Repository, including the dataframes and metadata information.
 
     Parameters: 
@@ -42,7 +42,7 @@ def fetch_ucirepo(
 
     Returns:
         result (dotdict): object containing dataset metadata, dataframes, and variable info in its properties
-    '''
+    """
 
     # check that only one argument is provided
     if name and id:
@@ -91,8 +91,7 @@ def fetch_ucirepo(
     if not data_url:
         raise DatasetNotFoundError('"{}" dataset (id={}) exists in the repository, but is not available for import. Please select a dataset from this list: https://archive.ics.uci.edu/datasets?skip=0&take=10&sort=desc&orderBy=NumHits&search=&Python=true'.format(name, id))
     
-    current_directory = os.getcwd()
-    directory = os.path.join(current_directory, "assets/datasets")
+    directory = "../assets/datasets"
     file_name = f"{id}.csv"
     file_path = os.path.join(directory, file_name)
 
@@ -178,7 +177,7 @@ def fetch_ucirepo(
 
 
 def list_available_datasets(filter: Optional[str] = None, search: Optional[str] = None, area: Optional[str] = None):
-    '''
+    """
     Prints a list of datasets that can be imported via fetch_ucirepo function
 
     Parameters: 
@@ -188,7 +187,7 @@ def list_available_datasets(filter: Optional[str] = None, search: Optional[str] 
 
     Returns:
         None
-    '''
+    """
 
     # validate filter input
     if filter:
