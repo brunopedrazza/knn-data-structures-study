@@ -4,8 +4,33 @@ from trees.nodes.node import Node
 
 
 class KdTreeNode(Node):
+    """ Class that defines a KdTree node. Used to construct a KdTree structure.
+
+    Steps to construct the tree:
+    1 - An axis is defined based on the depth of the node and the dimension of the points.
+    2 - The points are sorted based on the value on the axis.
+    3 - Split the points in half and divide them on the left and right childs.
+
+    To use for classification time, it stores the split value and the axis.
+    The split value will be used as a reference to determine whether go to the right or to the left given a target point.
+
+    Construction time complexity is O(n log n).
+    """
 
     def __init__(self, X, X_idx, leaf_size, depth=0):
+        """ Init method to construct the tree structure.
+
+        Parameters
+        ----------
+        X : List[Any]
+            Construction points.
+        X_idx : List[Any]
+            Indices of the X points in the training set.
+        leaf_size : int
+            Number of points in leaves.
+        depth : int
+            The depth of the node in the tree.
+        """
 
         self.X = None
         self.X_idx = None

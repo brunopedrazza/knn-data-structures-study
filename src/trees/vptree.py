@@ -5,6 +5,17 @@ from trees.tree import ClassificationTree
 
 
 class VpTree(ClassificationTree):
+    """ Class that defines a VpTree structure. Used to classify a target point.
+    
+    To traverse the tree recursively, the distance is calculated between the target point and the current vantage point. If the distances is 
+    less than the threshold, it goes to the closer child in relation to the vantage point, and to the farther if not. It keeps going to the 
+    "good" child until it reaches a leaf node.
+    After going all the way to the "good" side, it have to check if it needs to check the "bad" side as well. If the difference from the 
+    threshold to the distance of the target to the vantage point is less than the distance of most distant neighbor found, 
+    it needs to check for the "bad" side.
+
+    The closest neighbors are stored in a max heap structure. It is populated when it reaches a leaf node.
+    """
 
     def __init__(self, X, k, leaf_size):
         super().__init__(X, k, leaf_size, VpTreeNode)

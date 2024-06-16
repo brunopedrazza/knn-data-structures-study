@@ -1,11 +1,38 @@
 import numpy as np
 
-from helpers.utils import euclidean_distance
 from trees.nodes.node import Node
 
+
 class VpTreeNode(Node):
-    
+    """ Class that defines a VpTree node. Used to construct a VpTree structure.
+
+    Steps to construct the tree:
+    1 - Choose the vantage point given the index.
+    2 - Calculate the distances between the vantage point and the other ones
+    3 - Calculate the median of the distances and set it as the threshold.
+    4 - Split the points that are below and above the thresholf defined.
+    5 - Get the index of the farthest point from the vantage point on each child, 
+    they will be used as the index of the vantage point for each child.
+
+    To use for classification time, it stores the vantage point and the threshold on each node.
+
+    Construction time complexity is O(n(log n)^2).
+    """
+
     def __init__(self, X, X_idx, leaf_size, vp_idx=None):
+        """ Init method to construct the tree structure.
+
+        Parameters
+        ----------
+        X : List[Any]
+            Construction points.
+        X_idx : List[Any]
+            Indices of the X points in the training set.
+        leaf_size : int
+            Number of points in leaves.
+        vp_idx : int
+            Index of the vantage point.
+        """
 
         self.X = None
         self.X_idx = None
@@ -23,8 +50,8 @@ class VpTreeNode(Node):
         vp_idx = 0 if vp_idx is None else vp_idx
         self.vp = X[vp_idx]
 
-        # Choose division boundary at median of distances.
-        distances = euclidean_distance(np.array([self.vp]), X)[0]
+        # Choose division boundary at median of distances
+        distances = np.linalg.norm(X - self.vp, axis=1)
 
         # Compute the median of distances
         self.t = np.median(distances)

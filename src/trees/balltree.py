@@ -1,18 +1,28 @@
 import numpy as np
 
-from trees.nodes.balltreenode import BallTreeNode
 from helpers.heap import MaxHeap
+from trees.nodes.balltreenode import BallTreeNode
 from trees.tree import ClassificationTree
 
 
 class BallTree(ClassificationTree):
+
+    """ Class that defines a BallTree structure. Used to classify a target point.
+    
+    To traverse the tree recursively, the target point is projected on the line vector and it goes to the left if the projection
+    is less than or equal to the current median or to the right if not. It keeps going to the "good" child until it reaches a leaf node.
+    After going all the way to the "good" side, it have to check if it needs to check the "bad" side as well. If the distance 
+    to the hyperplane is less than the distance of most distant neighbor found, it needs to check for the "bad" side.
+
+    The closest neighbors are stored in a max heap structure. It is populated when it reaches a leaf node.
+    """
 
     def __init__(self, X, k, leaf_size):
         super().__init__(X, k, leaf_size, BallTreeNode)
 
     def __predict(self, current: BallTreeNode, target, mh: MaxHeap):
         if not current.is_leaf:
-            projection = np.dot(target, current.line_vector) / current.transp
+            projection = np.dot(target, current.line_vector) / current.vector_norm
             if projection <= current.median:
                 good = current.left
                 bad = current.right
