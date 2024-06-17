@@ -22,8 +22,6 @@ class BallTreeNode(Node):
     The median will be used as a reference to determine whether go to the right or to the left given a target point.
     The norm vector is used to avoid recalculating it for every target point.
 
-    Construction time complexity is O(n(log n)^2).
-
     """
             
     def __init__(self, X, X_idx, leaf_size):

@@ -14,7 +14,6 @@ class KdTreeNode(Node):
     To use for classification time, it stores the split value and the axis.
     The split value will be used as a reference to determine whether go to the right or to the left given a target point.
 
-    Construction time complexity is O(n log n).
     """
 
     def __init__(self, X, X_idx, leaf_size, depth=0):

@@ -16,7 +16,6 @@ class VpTreeNode(Node):
 
     To use for classification time, it stores the vantage point and the threshold on each node.
 
-    Construction time complexity is O(n(log n)^2).
     """
 
     def __init__(self, X, X_idx, leaf_size, vp_idx=None):
