@@ -1,17 +1,16 @@
-from collections import defaultdict
-from itertools import groupby
-import json
-from operator import itemgetter
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from helpers.benchmark import bench_predict_duration
+from collections import defaultdict
+from operator import itemgetter
+
 from helpers.utils import get_results
 
 
 def run_comparison(results):
-    results = [d for d in results if d["k"] == "1"]
+    db_ids = ["229", "53"]
+    results = [d for d in results if d["k"] == "1" and d["db_id"] in db_ids and d["method"] != "brute_force"]
     results.sort(key=lambda item: int(itemgetter("n_samples")(item)))
     db_groups = defaultdict(list)
     for row in results:
@@ -22,12 +21,12 @@ def run_comparison(results):
         ri = {}
         for r in result:
             ri[r["method"]] = r["predict_duration_seconds"]
-        ro[n_samples] = ri
-    
+        ro[f"{n_samples};{result[0]["n_dimensions"]}"] = ri
+
     num_groups = len(ro)
     index = np.arange(num_groups)
     bar_width = 0.2
-    fig, ax = plt.subplots(figsize=(14, 8))
+    _, ax = plt.subplots(figsize=(14, 8))
     vibrant_colors = ['orange', 'dodgerblue', 'limegreen', 'hotpink']
 
     labels = list(ro[list(ro.keys())[0]].keys())
@@ -40,7 +39,7 @@ def run_comparison(results):
     ax.set_title('Performance Comparison')
     ax.set_xticks(index + bar_width * (len(labels) - 1) / 2)
     ax.set_xticklabels(ro.keys())
-    ax.set_yscale('log')  # Keeping the y-axis logarithmic for better visibility
+    # ax.set_yscale('log')  # Keeping the y-axis logarithmic for better visibility
     ax.legend()
 
     plt.show()
