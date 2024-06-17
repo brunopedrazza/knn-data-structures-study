@@ -48,18 +48,3 @@ def bench_fit_duration(X, y, k, method, num_calls=100):
 
     return fit_duration_seconds / num_calls
 
-def bench_predict_duration(X, y,  k, method, num_calls=100):
-    X_train, X_test, y_train, _ = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=42)
-
-    predict_duration_seconds = 0
-    for _ in range(0, num_calls):
-        knn = KNN(k=k, method=method, leaf_size=50)
-
-        knn.fit(X_train, y_train)
-
-        tic = perf_counter()
-        knn.predict(X_test)
-        toc = perf_counter()
-        predict_duration_seconds += (toc - tic)
-
-    return predict_duration_seconds / num_calls
