@@ -40,7 +40,7 @@ def run_comparison(results):
     ax.set_title('Performance Comparison')
     ax.set_xticks(index + bar_width * (len(labels) - 1) / 2)
     ax.set_xticklabels(ro.keys())
-    # ax.set_yscale('log')  # Keeping the y-axis logarithmic for better visibility
+    ax.set_yscale('log')  # Keeping the y-axis logarithmic for better visibility
     ax.legend()
 
     plt.show()
