@@ -33,7 +33,7 @@ if __name__ == "__main__":
         now = datetime.now().strftime('%H:%M:%S')
         print(f"\n({now}) Classification of dataset {metadata.name} has started...")
         num_calls = 1 if len(X) > 20_000 else parameters.max_num_calls
-        for k in parameters.ks:
+        for k in parameters.n_neighbors:
             for method in parameters.methods:
                 data = {
                     "db_id": metadata.uci_id,
