@@ -18,7 +18,7 @@ if __name__ == "__main__":
             fit_time = bench_fit_duration(X, y, k, method, num_calls=20)
             results.append((n_samples, fit_time))
         results = np.array(results)
-        plt.plot(results[:, 0], results[:, 1], 'o-', label=method)
+        plt.plot(results[:, 0], results[:, 1], '-', label=method)
 
     plt.legend()
     plt.ylabel("Time (sec)")
