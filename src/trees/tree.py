@@ -32,6 +32,7 @@ class ClassificationTree:
 
         return best_idxs
     
+    
     def calculate_distances_leaf(self, X, X_idx, target, mh: MaxHeap):
         """ Method that calculates the distances of the points on the leaf node 
         to the the target point and stores the closer ones into the max heap.
@@ -54,8 +55,9 @@ class ClassificationTree:
         sorted_idxs = np.argsort(dists)
         sorted_dists = dists[sorted_idxs[:self._k]]
         sorted_X_idxs = X_idx[sorted_idxs[:self._k]]
-        if len(mh.heap) == 0 or mh.heap[0][0] > sorted_dists[0]:
-            for d, idx in zip(sorted_dists, sorted_X_idxs):
-                if len(mh.heap) < self._k or d < mh.heap[0][0]:
-                    mh.add([d, idx])
+
+        index = 0
+        while index < len(sorted_dists) and (len(mh.heap) < self._k or sorted_dists[index] < mh.heap[0][0]):
+            mh.add([sorted_dists[index], sorted_X_idxs[index]])
+            index += 1
         return mh
