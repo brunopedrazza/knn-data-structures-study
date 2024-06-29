@@ -22,7 +22,7 @@ def benchmark(X, y, k, method, leaf_size=None, num_calls=100):
         fit_duration_seconds += (toc - tic)
 
         tic = perf_counter()
-        y_pred, distance_count = knn.predict(X_test)
+        y_pred, nodes_visited, max_depth = knn.predict(X_test)
         toc = perf_counter()
         predict_duration_seconds += (toc - tic)
 
@@ -33,13 +33,14 @@ def benchmark(X, y, k, method, leaf_size=None, num_calls=100):
         "fit_duration_seconds": fit_duration_seconds / num_calls,
         "predict_duration_seconds": predict_duration_seconds / num_calls,
         "accuracy": acc,
-        "distance_count": distance_count
+        "nodes_visited": nodes_visited,
+        "max_depth": max_depth
     }
 
-def bench_fit_duration(X, y, k, method, num_calls=100):
+def bench_fit_duration(X, y, method, num_calls=100):
     fit_duration_seconds = 0
     for _ in range(0, num_calls):
-        knn = KNN(k=k, method=method, leaf_size=2)
+        knn = KNN(k=1, method=method, leaf_size=2)
 
         tic = perf_counter()
         knn.fit(X, y)
