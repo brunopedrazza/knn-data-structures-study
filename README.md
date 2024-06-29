@@ -20,7 +20,7 @@ To run the application locally, cd into the `/src` directory and run `$python -m
 There is a pre-populated parameters file named `/parameters.yaml` that contains all the parameters needed to run the benchmark:
 
 1. `n_neighbors` defines how many neighbors do you want to get (default: 1, 3 and 5)
-2. `methods` defines which methods do you want to use (default: brute_force, kd_tree, ball_tree and vp_tree)
+2. `methods` defines which methods do you want to use (default: brute_force, kd_tree, ball_tree, ball*_tree and vp_tree)
 3. `database_ids` defines the databases ids from [UC Irvine dataset repo](https://archive.ics.uci.edu/datasets) that you want to use to run the benchmark.
 4. `leaf_size` defines how many points are going to be stored in leaf nodes, only applies for tree-based methods.
 5. `max_num_calls` defines how many times to repeat the benchmarks in order to refine the results.
@@ -48,7 +48,8 @@ With `--save` the results will only be printed once.
 - `fit_duration_seconds`: How many seconds in average it took to fit all training points.
 - `predict_duration_seconds`: How many seconds in average it took to classify all test points.
 - `accuracy`: Accuracy of the results.
-- `distance_count`: How many distances were calculated to classify all points.
+- `nodes_visited`: How many nodes were visited during classification time.
+- `max_depth`: Depth of the tree, indicates if the tree is well balanced or not.
 
 ## Folder Structure
 
@@ -64,7 +65,7 @@ The results of each benchmark is going to be stored here as a csv file.
 Here we have all the helper methods used by the application, including:
 
 - `heap.py`: Implementation of a max heap to help to always maintain the k-nearest neighbor points. The most distant one (the first to be removed if a closer point is found) is always at the first position of the heap.
-- `utils.py`: Some shared, util methods used by the application. Ex: Method to calculate eucledian distance between points.
+- `utils.py`: Some shared, util methods used by the application. Ex: Method to calculate Euclidian distance between points.
 
 #### `/src/scripts`
 Entry point files to run benchmarks, plot results and show results.
