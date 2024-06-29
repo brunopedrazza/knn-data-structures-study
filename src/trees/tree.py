@@ -1,6 +1,5 @@
 import numpy as np
 
-from helpers.utils import euclidean_distance
 from helpers.heap import MaxHeap
 from trees.nodes.node import Node
 
@@ -10,9 +9,10 @@ class ClassificationTree:
     def __init__(self, X, k, leaf_size, node: Node):
         self._root = node(X=np.array(X), X_idx=np.arange(len(X)), leaf_size=leaf_size)
         self._k = k
-        self.distance_count = 0
+        self.nodes_visited = 0
+        self.max_depth = 0
 
-    def predict(self, X, prediction_method):
+    def query(self, X, prediction_method):
         """ Method that iterates through the testing points and use the prediction 
         method to get the k close neighbors. Returns their indices on the training set.
 
@@ -33,7 +33,7 @@ class ClassificationTree:
         return best_idxs
     
     
-    def calculate_distances_leaf(self, X, X_idx, target, mh: MaxHeap):
+    def calculate_distances_leaf(self, X, X_idx, target, mh: MaxHeap, depth):
         """ Method that calculates the distances of the points on the leaf node 
         to the the target point and stores the closer ones into the max heap.
 
@@ -49,8 +49,9 @@ class ClassificationTree:
             The max heap to store best distances.
         """
 
-        dists = euclidean_distance(np.array([target]), X)[0]
-        self.distance_count += X.shape[0]
+        dists = np.linalg.norm(X - target, axis=1)
+        self.nodes_visited += 1
+        self.max_depth = max(self.max_depth, depth)
 
         sorted_idxs = np.argsort(dists)
         sorted_dists = dists[sorted_idxs[:self._k]]

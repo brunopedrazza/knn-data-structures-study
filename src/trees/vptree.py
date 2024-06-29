@@ -1,4 +1,4 @@
-from helpers.utils import euclidean_distance
+import numpy as np
 from helpers.heap import MaxHeap
 from trees.nodes.vptreenode import VpTreeNode
 from trees.tree import ClassificationTree
@@ -20,9 +20,10 @@ class VpTree(ClassificationTree):
     def __init__(self, X, k, leaf_size):
         super().__init__(X, k, leaf_size, VpTreeNode)
 
-    def __predict(self, current: VpTreeNode, target, mh: MaxHeap):
+    def __query(self, current: VpTreeNode, target, mh: MaxHeap, depth=0):
         if not current.is_leaf:
-            d = euclidean_distance(target, current.vp)
+            # d = euclidean_distance(target, current.vp)
+            d = np.linalg.norm(target - current.vp)
             if d < current.t:
                 good = current.closer
                 bad = current.farther
@@ -30,16 +31,16 @@ class VpTree(ClassificationTree):
                 good = current.farther
                 bad = current.closer
             
-            mh = self.__predict(good, target, mh)
+            mh = self.__query(good, target, mh, depth+1)
             
             r_ = abs(current.t - d)
             if not mh.is_full() or mh.heap[0][0] > r_:
-                mh = self.__predict(bad, target, mh)
+                mh = self.__query(bad, target, mh, depth+1)
                 
             return mh
         else:
-            return super().calculate_distances_leaf(current.X, current.X_idx, target, mh)
+            return super().calculate_distances_leaf(current.X, current.X_idx, target, mh, depth)
          
     
     def predict(self, X):
-        return super().predict(X, self.__predict)
+        return super().query(X, self.__query)

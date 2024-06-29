@@ -5,27 +5,9 @@ import csv
 
 from collections import defaultdict
 from datetime import datetime
-from scipy.spatial import distance
 from tabulate import tabulate
 
 from helpers.dotdict import dotdict
-
-
-def euclidean_distance(p1, p2, squared=False):
-    """ Calculates the Eucledian distances between two points.
-
-    Parameters
-    ----------
-    p1 : Any
-    p2 : Any
-    squared : boolean
-        If True, it will return the squared distance.
-    """
-
-    if not hasattr(p1, "shape") or len(p1.shape) == 1:
-        dist = np.sum(np.square(p1 - p2))
-        return dist if squared else np.sqrt(dist)
-    return distance.cdist(p1, p2, 'euclidean')
 
 
 def find_farthest_point(X, point):
@@ -98,7 +80,8 @@ def print_results(file_name=None, results=None):
                 "fit_duration_ms": float(db_result["fit_duration_seconds"]) * 1000,
                 "predict_duration_seconds": db_result["predict_duration_seconds"],
                 "accuracy": f"{float(accuracy)*100:.2f}%",
-                "distance_count": db_result["distance_count"],
+                "nodes_visited": db_result["nodes_visited"],
+                "max_depth": db_result["max_depth"],
             }
             improv = 0
             if result["method"] != "brute_force":

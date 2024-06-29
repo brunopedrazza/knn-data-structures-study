@@ -3,8 +3,8 @@ import scipy
 
 from trees.vptree import VpTree
 from trees.kdtree import KdTree
+from trees.ballwtree import BallWTree
 from trees.balltree import BallTree
-from helpers.utils import euclidean_distance
 
 
 class KNN:
@@ -15,12 +15,13 @@ class KNN:
     k : int, default=3
         Number of neighbors to use by default.
 
-    method : {'brute_force', 'kd_tree', 'ball_tree', 'vp_tree'}, default='brute_force'
+    method : {'brute_force', 'kd_tree', 'ball_tree', 'ball*_tree', 'vp_tree'}, default='brute_force'
         Method used to compute the nearest neighbors:
 
         - 'brute_force' will use a brute-force search.
         - 'kd_tree' will use :class:`KdTree`
         - 'ball_tree' will use :class:`BallTree`
+        - 'ball*_tree' will use :class:`BallWTree`
         - 'vp_tree' will use :class:`VpTree`
     
     leaf_size : int, default=30
@@ -28,7 +29,7 @@ class KNN:
     """
 
     def __init__(self, k=3, method="brute_force", leaf_size=30):
-        if method not in ("brute_force", "kd_tree", "ball_tree", "vp_tree"):
+        if method not in ("brute_force", "kd_tree", "ball_tree", "ball*_tree", "vp_tree"):
             raise ValueError("Invalid method")
         if leaf_size <= 1:
             raise ValueError("Invalid leaf size")
@@ -82,6 +83,8 @@ class KNN:
             self._tree = KdTree(X_train, k=self._k, leaf_size=self._leaf_size)
         elif self._method == "ball_tree":
             self._tree = BallTree(X_train, k=self._k, leaf_size=self._leaf_size)
+        elif self._method == "ball*_tree":
+            self._tree = BallWTree(X_train, k=self._k, leaf_size=self._leaf_size)
         elif self._method == "vp_tree":
             self._tree = VpTree(X_train, k=self._k, leaf_size=self._leaf_size)
     
@@ -93,8 +96,8 @@ class KNN:
         best_idxs = np.empty((X_test.shape[0], self._k), dtype=np.int32)
 
         for i, target in enumerate(X_test):
-            dists = euclidean_distance(np.array([target]), self._X_train)
-            best_idxs[i, :] = np.argsort(dists, axis=1)[:, :self._k]
+            dists = np.linalg.norm(self._X_train - target, axis=1)
+            best_idxs[i, :] = np.argsort(dists)[:self._k]
 
         return best_idxs
 
@@ -112,13 +115,14 @@ class KNN:
         _classes = self._classes
         _y_train_idxs = self._y_train_indices
 
-        distance_count = None
+        nodes_visited = 0
+        max_depth = 0
         if self._method == "brute_force":
             best_idxs = self.__compute_distances(_X_test)
-            distance_count = self._X_train.shape[0] * _X_test.shape[0]
-        elif self._method in ("kd_tree", "ball_tree", "vp_tree"):
+        elif self._method in ("kd_tree", "ball_tree", "ball*_tree", "vp_tree"):
             best_idxs = self._tree.predict(_X_test)
-            distance_count = self._tree.distance_count
+            nodes_visited = self._tree.nodes_visited
+            max_depth = self._tree.max_depth
 
         n_classes = len(_classes)
         n_X_test = len(_X_test)
@@ -128,5 +132,5 @@ class KNN:
         mode = np.asarray(np.ravel(mode))
         y_pred = _classes.take(mode)
 
-        return np.ravel(y_pred), distance_count
+        return np.ravel(y_pred), nodes_visited, max_depth
     

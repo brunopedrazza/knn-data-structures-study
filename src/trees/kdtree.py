@@ -19,7 +19,7 @@ class KdTree(ClassificationTree):
     def __init__(self, X, k, leaf_size):
         super().__init__(X, k, leaf_size, KdTreeNode)
 
-    def __predict(self, current: KdTreeNode, target, mh: MaxHeap):
+    def __query(self, current: KdTreeNode, target, mh: MaxHeap, depth=0):
         if not current.is_leaf:
             axis = current.axis
             if target[axis] < current.split_value:
@@ -29,16 +29,16 @@ class KdTree(ClassificationTree):
                 good = current.right
                 bad = current.left
             
-            mh = self.__predict(good, target, mh)
+            mh = self.__query(good, target, mh, depth+1)
 
             r_ = abs(target[axis] - current.split_value)
-            if not mh.is_full() or mh.heap[0][0] >= r_:
-                mh = self.__predict(bad, target, mh)
+            if not mh.is_full() or mh.heap[0][0] > r_:
+                mh = self.__query(bad, target, mh, depth+1)
                 
             return mh
         else:
-            return super().calculate_distances_leaf(current.X, current.X_idx, target, mh)
+            return super().calculate_distances_leaf(current.X, current.X_idx, target, mh, depth)
 
     
     def predict(self, X):
-        return super().predict(X, self.__predict)
+        return super().query(X, self.__query)

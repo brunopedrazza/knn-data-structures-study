@@ -1,21 +1,11 @@
+from typing import Any
+
 class Node:
-    
-    def __init__(self, X, X_idx, leaf_size: int, depth: int): 
-        """ Recursively constructs a tree structure.
-
-        Parameters
-        ----------
-        X : List[Any]
-            Construction points.
-        X_idx : List[Any]
-            Indices of the X points in the training set.
-        leaf_size : int
-            Number of points in leaves.
-        depth : int
-            Depth of that node related to the tree structure
-        """
-        ...
-
+    X: Any
+    X_idx: Any
+    is_leaf: bool
+    right: 'Node'
+    left: 'Node'
 
     def create_leaf(self, X, X_idx):
         """ Base method to create a leaf node with points an indices. Set node with is_leaf = True;
