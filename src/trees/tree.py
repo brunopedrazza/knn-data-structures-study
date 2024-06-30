@@ -9,7 +9,7 @@ class ClassificationTree:
     def __init__(self, X, k, leaf_size, node: Node):
         self._root = node(X=np.array(X), X_idx=np.arange(len(X)), leaf_size=leaf_size)
         self._k = k
-        self.nodes_visited = 0
+        self.total_nodes_visited = 0
         self.max_depth = 0
 
     def query(self, X, prediction_method):
@@ -52,7 +52,7 @@ class ClassificationTree:
         """
 
         dists = np.linalg.norm(X - target, axis=1)
-        self.nodes_visited += 1
+        self.total_nodes_visited += 1
         self.max_depth = max(self.max_depth, depth)
 
         sorted_idxs = np.argsort(dists)

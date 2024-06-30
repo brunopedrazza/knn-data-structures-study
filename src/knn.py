@@ -114,23 +114,23 @@ class KNN:
         _X_test = np.array(X_test)
         _classes = self._classes
         _y_train_idxs = self._y_train_indices
+        n_classes = len(_classes)
+        n_X_test = len(_X_test)
 
-        nodes_visited = 0
+        avg_nodes_visited = 0
         max_depth = 0
         if self._method == "brute_force":
             best_idxs = self.__compute_distances(_X_test)
         elif self._method in ("kd_tree", "ball_tree", "ball*_tree", "vp_tree"):
             best_idxs = self._tree.predict(_X_test)
-            nodes_visited = self._tree.nodes_visited
+            avg_nodes_visited = self._tree.total_nodes_visited / n_X_test
             max_depth = self._tree.max_depth
 
-        n_classes = len(_classes)
-        n_X_test = len(_X_test)
 
         y_pred = np.empty((n_X_test, n_classes), dtype=_classes.dtype)
         mode = scipy.stats.mode(_y_train_idxs[best_idxs], axis=1, keepdims=True).mode
         mode = np.asarray(np.ravel(mode))
         y_pred = _classes.take(mode)
 
-        return np.ravel(y_pred), nodes_visited, max_depth
+        return np.ravel(y_pred), avg_nodes_visited, max_depth
     

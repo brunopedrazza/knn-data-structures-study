@@ -80,7 +80,7 @@ def print_results(file_name=None, results=None):
                 "fit_duration_ms": float(db_result["fit_duration_seconds"]) * 1000,
                 "predict_duration_seconds": db_result["predict_duration_seconds"],
                 "accuracy": f"{float(accuracy)*100:.2f}%",
-                "nodes_visited": db_result["nodes_visited"],
+                "avg_nodes_visited": db_result["avg_nodes_visited"],
                 "max_depth": db_result["max_depth"],
             }
             improv = 0

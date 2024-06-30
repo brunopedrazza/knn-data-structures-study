@@ -48,7 +48,7 @@ With `--save` the results will only be printed once.
 - `fit_duration_seconds`: How many seconds in average it took to fit all training points.
 - `predict_duration_seconds`: How many seconds in average it took to classify all test points.
 - `accuracy`: Accuracy of the results.
-- `nodes_visited`: How many nodes were visited during classification time.
+- `avg_nodes_visited`: How many nodes were visited during classification time on average.
 - `max_depth`: Depth of the tree, indicates if the tree is well balanced or not.
 
 ## Folder Structure
