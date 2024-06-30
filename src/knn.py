@@ -123,7 +123,7 @@ class KNN:
             best_idxs = self.__compute_distances(_X_test)
         elif self._method in ("kd_tree", "ball_tree", "ball*_tree", "vp_tree"):
             best_idxs = self._tree.predict(_X_test)
-            avg_nodes_visited = self._tree.total_nodes_visited / n_X_test
+            avg_nodes_visited = self._tree.total_points_visited / n_X_test
             max_depth = self._tree.max_depth
 
 
