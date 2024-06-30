@@ -23,4 +23,4 @@ database_ids:
 - 159   # MAGIC Gamma Telescope (medium instances - 19020, medium dimensions - 10) - https://archive.ics.uci.edu/dataset/159/magic+gamma+telescope
 - 148   # Statlog (Shuttle) (high instances - 58000, medium dimensions - 7) - https://archive.ics.uci.edu/dataset/148/statlog+shuttle
 leaf_size: 100
-max_num_calls: 20
+n_iterations: 20

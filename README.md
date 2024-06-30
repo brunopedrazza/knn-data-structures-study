@@ -23,7 +23,7 @@ There is a pre-populated parameters file named `/parameters.yaml` that contains 
 2. `methods` defines which methods do you want to use (default: brute_force, kd_tree, ball_tree, ball*_tree and vp_tree)
 3. `database_ids` defines the databases ids from [UC Irvine dataset repo](https://archive.ics.uci.edu/datasets) that you want to use to run the benchmark.
 4. `leaf_size` defines how many points are going to be stored in leaf nodes, only applies for tree-based methods.
-5. `max_num_calls` defines how many times to repeat the benchmarks in order to refine the results.
+5. `n_iterations` defines how many times to repeat the benchmarks in order to refine the results.
 
 The database ids are already filled with a variety of datasets, each one with a characteristic that benefits from a specific method. Feel free to remove or add more if needed.
 

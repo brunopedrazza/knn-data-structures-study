@@ -16,7 +16,7 @@ if __name__ == "__main__":
     for method in methods:
         results = []
         for k in range(1, 60, 2):
-            predict_time = bench_predict_duration(X_train, y_train, X_test, k, method, num_calls=20, leaf_size=100)
+            predict_time = bench_predict_duration(X_train, y_train, X_test, k, method, n_iterations=20, leaf_size=100)
             results.append((k, predict_time))
         results = np.array(results)
         plt.plot(results[:, 0], results[:, 1], '-', label=method)

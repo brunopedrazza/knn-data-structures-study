@@ -24,7 +24,7 @@ if __name__ == "__main__":
             Xi = X[:n_samples]
             yi = y[:n_samples]
             X_train, X_test, y_train, y_test = train_test_split(Xi, yi, test_size=0.2, shuffle=True, random_state=42)
-            predict_time = bench_predict_duration(X_train, y_train, X_test, k, method, num_calls=num_calls[i], leaf_size=num_leaf_sizes[i])
+            predict_time = bench_predict_duration(X_train, y_train, X_test, k, method, n_iterations=num_calls[i], leaf_size=num_leaf_sizes[i])
             results.append((n_samples, predict_time))
         results = np.array(results)
         plt.plot(results[:, 0], results[:, 1], '-', label=method)

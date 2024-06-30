@@ -32,7 +32,7 @@ if __name__ == "__main__":
         X, y, metadata = db_data
         now = datetime.now().strftime('%H:%M:%S')
         print(f"\n({now}) Classification of dataset {metadata.name} has started...")
-        num_calls = 1 if len(X) > 20_000 else parameters.max_num_calls
+        n_iterations = 1 if len(X) > 20_000 else parameters.n_iterations
         for k in parameters.n_neighbors:
             for method in parameters.methods:
                 data = {
@@ -43,7 +43,7 @@ if __name__ == "__main__":
                     "k": k,
                     "method": method
                 }
-                result = benchmark(X, y, k, method, parameters.leaf_size, num_calls=num_calls)
+                result = benchmark(X, y, k, method, parameters.leaf_size, n_iterations=n_iterations)
                 data.update(result)
                 results.append(data)
 

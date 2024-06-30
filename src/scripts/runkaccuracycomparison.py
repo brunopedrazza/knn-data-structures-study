@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     results = []
     for k in range(1, 90, 1):
-        beanch = benchmark(X, y, k, method, num_calls=1, leaf_size=100)
+        beanch = benchmark(X, y, k, method, n_iterations=1, leaf_size=100)
         results.append((k, beanch["accuracy"]))
     results = np.array(results)
     plt.plot(results[:, 0], results[:, 1], '-')
