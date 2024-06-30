@@ -23,7 +23,7 @@ class VpTree(ClassificationTree):
     def __query(self, current: VpTreeNode, target, mh: MaxHeap, depth=0):
         if not current.is_leaf:
             d = np.linalg.norm(target - current.vp)
-            if d < current.t:
+            if d <= current.t:
                 good = current.closer
                 bad = current.farther
             else:

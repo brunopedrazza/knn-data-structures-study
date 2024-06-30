@@ -47,6 +47,8 @@ class ClassificationTree:
             The target point.
         mh : MaxHeap
             The max heap to store best distances.
+        depth : int
+            The depth of the tree.
         """
 
         dists = np.linalg.norm(X - target, axis=1)

@@ -64,7 +64,7 @@ class VpTreeNode(Node):
         farther_max_d = 0
         farther_max_d_idx = None
         for point, idx, distance in zip(X, X_idx, distances):
-            if distance < self.t:
+            if distance <= self.t:
                 X_closer.append(point)
                 X_idx_closer.append(idx)
                 if distance > closer_max_d:

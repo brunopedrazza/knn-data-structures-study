@@ -90,7 +90,7 @@ class KNN:
     
     def __compute_distances(self, X_test):
         """ Internal method used for brute force. It iterates through all test points, 
-        calculate all distances, sorts it and store the k best neighbors.
+        calculate all distances, sorts it and store the k nearest neighbors.
         """
 
         best_idxs = np.empty((X_test.shape[0], self._k), dtype=np.int32)

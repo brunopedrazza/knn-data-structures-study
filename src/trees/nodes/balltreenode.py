@@ -8,19 +8,16 @@ class BallTreeNode(Node):
     """ Class that defines a BallTree node. Used to construct a BallTree structure.
 
     Steps to construct the tree:
-    1 - Pick a random point in X.
-    2 - Finds the farthest point from the randomly picked point, x0.
-    3 - Finds the farthest point from x0, x1.
-    4 - Calculate the line vector between points x1 and x0. (x0 and x1 are two extremes in the dataset)
-    5 - Project all points onto this line vector.
-    6 - Calculate the median of the projections.
-    7 - Split the points based on the median.
-    8 - The points that have their projections less than or equal to the median goes to the left node, 
-    others go to the right.
+    1 - Calculate the centroid based on the mean of X.
+    2 - Find the farthest point from the centroid, this will be our left pivot.
+    3 - Calculate the radius based on the distance to the left pivot.
+    4 - Find the farthest point from the left pivot, this will be our right pivot.
+    7 - Split the points based on the proximity with left pivot and right pivot.
+    8 - The points closer to the left eft pivot goes to the left child, and other to the right.
 
-    To use for classification time, it stores the median and the normalized vector on each node.
-    The median will be used as a reference to determine whether go to the right or to the left given a target point.
-    The norm vector is used to avoid recalculating it for every target point.
+    To use for classification time, it stores the centroid and radius on each node.
+    The centroid will be used as a reference to determine whether go to the right or to the left given a target point.
+    The radius is used to check if whe can prune the other child.
 
     """
     def __init__(self, X, X_idx, leaf_size):
