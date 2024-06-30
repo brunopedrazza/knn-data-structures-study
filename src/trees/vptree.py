@@ -22,7 +22,6 @@ class VpTree(ClassificationTree):
 
     def __query(self, current: VpTreeNode, target, mh: MaxHeap, depth=0):
         if not current.is_leaf:
-            # d = euclidean_distance(target, current.vp)
             d = np.linalg.norm(target - current.vp)
             if d < current.t:
                 good = current.closer
