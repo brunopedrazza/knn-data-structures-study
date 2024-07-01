@@ -45,7 +45,7 @@ With `--save` the results will only be printed once.
 - `method`: Method used to improve (or not) the algorithm performance. 
 - `n_train`: Number of samples used for training.
 - `n_test`: Number of samples used for testing.
-- `fit_duration_seconds`: How many seconds in average it took to fit all training points.
+- `fit_duration_ms`: How many milliseconds in average it took to fit all training points.
 - `predict_duration_seconds`: How many seconds in average it took to classify all test points.
 - `accuracy`: Accuracy of the results.
 - `avg_nodes_visited`: How many nodes were visited during classification time on average.
