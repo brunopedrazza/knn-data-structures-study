@@ -32,7 +32,7 @@ if __name__ == "__main__":
         X, y, metadata = db_data
         now = datetime.now().strftime('%H:%M:%S')
         print(f"\n({now}) Classification of dataset {metadata.name} has started...")
-        n_iterations = 1 if len(X) > 20_000 else parameters.n_iterations
+        n_iterations = parameters.n_iterations
         for k in parameters.n_neighbors:
             for method in parameters.methods:
                 data = {
